@@ -1,0 +1,156 @@
+/* Portfolio kabuğu: üst gezinme, arka plan, footer uyumu */
+
+:root {
+    --primary-color: #121b7e;
+    --secondary-color: #ffffff;
+    --text-color: #333333;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    overflow-x: hidden;
+    background: #f5f6fa;
+}
+
+header {
+    background-color: white;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    position: relative;
+    z-index: 100;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    padding: 0 2rem;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+
+.portfolio-nav .logo {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    text-decoration: none;
+    margin: 0.5rem 0;
+}
+
+.nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-links a {
+    margin: 0.5rem 1rem;
+    text-decoration: none;
+    color: var(--text-color);
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: var(--primary-color);
+}
+
+.menu-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 90;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.menu-backdrop.active {
+    display: block;
+    opacity: 1;
+}
+
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    cursor: pointer;
+    padding: 0.5rem;
+    z-index: 101;
+}
+
+.portfolio-notice {
+    background: linear-gradient(135deg, #e8eaf6 0%, #fff8e1 100%);
+    border: 1px solid #c5cae9;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: #333;
+}
+
+.portfolio-notice code {
+    font-size: 0.85em;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+}
+
+.footer-logo-text {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.12);
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+@media (max-width: 768px) {
+    nav {
+        position: relative;
+        flex-wrap: wrap;
+        padding: 0.5rem;
+    }
+
+    .mobile-menu-toggle {
+        display: block;
+        position: absolute;
+        right: 1rem;
+        top: 0.75rem;
+    }
+
+    .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        padding: 0;
+        background: white;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        border-radius: 0 0 10px 10px;
+    }
+
+    .nav-links.active {
+        display: flex;
+        padding: 1rem 0;
+    }
+
+    .nav-links a {
+        width: 100%;
+        text-align: center;
+        margin: 0.4rem 0;
+    }
+}

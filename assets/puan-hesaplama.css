@@ -1,0 +1,1489 @@
+/* Puan Hesaplama Sayfası Stilleri */
+/* Renkler: Mavi #121b7e, Turuncu #FF9800, Gri #f5f5f5 */
+/* Font: Inter 500, Inter 700 */
+
+.calculator-main {
+    max-width: 1400px;
+    margin: 1.5rem auto;
+    padding: 0 1.5rem;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+}
+
+/* Ana Başlık */
+.main-header {
+    background: #121b7e;
+    padding: 2rem 1.5rem;
+    border-radius: 12px;
+    color: white;
+    text-align: center;
+    margin-bottom: 2rem;
+    border: 3px solid #121b7e;
+}
+
+.main-header h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.main-header i {
+    margin-right: 0.5rem;
+    font-size: 2rem;
+}
+
+.main-header p {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* Calculator Sections */
+.calculator-section {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 2px solid #e0e0e0;
+}
+
+/* Section Headers */
+.section-header-calc {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #f5f5f5;
+    padding: 1rem 1.5rem;
+    border-radius: 6px;
+    color: #121b7e;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid #121b7e;
+}
+
+.section-header-calc i {
+    font-size: 1.2rem;
+}
+
+.section-header-calc h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.tyt-header {
+    border-left-color: #121b7e;
+}
+
+.ayt-header {
+    border-left-color: #121b7e;
+}
+
+.results-header {
+    background: #fff8f0;
+    border-left-color: #FF9800;
+    color: #FF9800;
+}
+
+/* Diploma Input - Compact Version */
+.diploma-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.diploma-input-compact {
+    flex: 0 0 auto;
+}
+
+.diploma-input-compact label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.input-field-compact {
+    width: 150px;
+    padding: 0.6rem;
+    font-size: 1.2rem;
+    border: 2px solid #121b7e;
+    border-radius: 6px;
+    text-align: center;
+    transition: all 0.3s ease;
+    font-weight: 700;
+    background: white;
+}
+
+.input-field-compact:focus {
+    outline: none;
+    border-color: #FF9800;
+    background: white;
+}
+
+/* Previous Placement Toggle */
+.previous-placement {
+    flex: 0 0 auto;
+    text-align: center;
+}
+
+.switch-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.switch-text {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #121b7e;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #e0e0e0;
+    transition: 0.3s;
+    border-radius: 30px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 4px;
+    bottom: 4px;
+    background: white;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background: #FF9800;
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(30px);
+}
+
+.info-text {
+    margin-top: 0.3rem;
+    font-size: 0.75rem;
+    color: #666;
+    font-weight: 500;
+}
+
+/* Test Grid */
+.test-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.test-grid.single-item {
+    grid-template-columns: minmax(200px, 300px);
+    justify-content: center;
+}
+
+/* Test Cards */
+.test-card {
+    background: white;
+    border: 2px solid #121b7e;
+    border-radius: 6px;
+    padding: 1rem;
+}
+
+.test-card h3 {
+    color: #121b7e;
+    font-size: 0.9rem;
+    margin-bottom: 0.8rem;
+    font-weight: 700;
+    text-align: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.input-group label {
+    font-weight: 500;
+    color: #333;
+    font-size: 0.85rem;
+}
+
+.input-mini {
+    width: 50px;
+    padding: 0.3rem;
+    font-size: 0.9rem;
+    border: 1px solid #121b7e;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: 700;
+}
+
+.input-mini:focus {
+    outline: none;
+    border-color: #FF9800;
+}
+
+/* Net Display */
+.net-display {
+    background: #f5f5f5;
+    padding: 0.5rem;
+    border-radius: 4px;
+    text-align: center;
+    margin-top: 0.5rem;
+    font-weight: 700;
+    color: #121b7e;
+    font-size: 0.9rem;
+}
+
+.net-value {
+    font-size: 1rem;
+    color: #121b7e;
+}
+
+/* Subsections */
+.subsection {
+    margin-bottom: 1.2rem;
+}
+
+.subsection-title {
+    color: #121b7e;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid #121b7e;
+}
+
+/* Calculate Button */
+.calculate-btn-container {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.calculate-btn {
+    background: #121b7e;
+    color: white;
+    border: 3px solid #121b7e;
+    padding: 1rem 3rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.calculate-btn:hover {
+    background: #FF9800;
+    border-color: #FF9800;
+}
+
+.calculate-btn:active {
+    transform: scale(0.98);
+}
+
+.calculate-btn i {
+    font-size: 1.2rem;
+}
+
+/* Results Section */
+.results-section {
+    margin-top: 2rem;
+}
+
+.info-box {
+    background: #fff8f0;
+    border-left: 4px solid #FF9800;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+}
+
+.info-box p {
+    color: #333;
+    line-height: 1.4;
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.info-box strong {
+    color: #FF9800;
+    font-weight: 700;
+}
+
+/* Results Container */
+.results-container {
+    margin-top: 1.5rem;
+}
+
+.year-result {
+    background: white;
+    border-radius: 6px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 2px solid #e0e0e0;
+}
+
+.year-title {
+    font-size: 1.2rem;
+    color: #121b7e;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.year-title i {
+    color: #FF9800;
+    font-size: 1.2rem;
+}
+
+/* Table Wrapper - Mobil için yatay scroll */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 1rem 0;
+    border-radius: 6px;
+}
+
+/* Results Table */
+.results-table {
+    width: 100%;
+    min-width: 600px; /* Minimum genişlik - mobilde scroll edilebilir */
+    border-collapse: collapse;
+    border: 2px solid #121b7e;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.results-table thead {
+    background: #121b7e;
+    color: white;
+}
+
+.results-table th {
+    padding: 0.8rem;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.results-table tbody tr {
+    background: white;
+}
+
+.results-table tbody tr:nth-child(even) {
+    background: #f5f5f5;
+}
+
+.results-table td {
+    padding: 0.8rem;
+    text-align: center;
+    border-bottom: 1px solid #e0e0e0;
+    font-weight: 500;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.results-table td:first-child {
+    font-weight: 700;
+    color: #121b7e;
+    font-size: 0.95rem;
+}
+
+/* Info Section */
+.info-section {
+    margin: 2rem 0;
+}
+
+.info-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.info-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 6px;
+    border: 2px solid #e0e0e0;
+    text-align: center;
+}
+
+.info-card i {
+    font-size: 2rem;
+    color: #121b7e;
+    margin-bottom: 0.5rem;
+}
+
+.info-card h3 {
+    color: #121b7e;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.info-card p {
+    color: #666;
+    line-height: 1.4;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .calculator-main {
+        padding: 0 1rem;
+    }
+
+    .main-header {
+        padding: 1.5rem 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .main-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .main-header i {
+        font-size: 1.5rem;
+    }
+
+    .main-header p {
+        font-size: 0.9rem;
+    }
+
+    .calculator-section {
+        padding: 1rem;
+    }
+
+    .section-header-calc {
+        padding: 0.8rem 1rem;
+    }
+
+    .section-header-calc h2 {
+        font-size: 1rem;
+    }
+
+    /* Diploma container responsive */
+    .diploma-container {
+        flex-direction: column;
+        gap: 1.5rem;
+        width: 100%;
+    }
+
+    .diploma-input-compact {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .input-field-compact {
+        width: 100%;
+        max-width: 200px;
+    }
+
+    .switch-text {
+        font-size: 0.85rem;
+    }
+
+    .test-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
+    }
+
+    .test-card {
+        padding: 0.8rem;
+    }
+
+    .test-card h3 {
+        font-size: 0.8rem;
+    }
+
+    .input-mini {
+        width: 40px;
+        padding: 0.2rem;
+        font-size: 0.8rem;
+    }
+
+    .calculate-btn {
+        padding: 0.8rem 2rem;
+        font-size: 1rem;
+    }
+
+    .year-title {
+        font-size: 1rem;
+    }
+
+    .table-wrapper {
+        margin: 0.5rem 0;
+    }
+
+    .results-table {
+        font-size: 0.75rem;
+        min-width: 550px; /* Tablet için optimize */
+    }
+
+    .results-table th,
+    .results-table td {
+        padding: 0.5rem 0.4rem;
+        white-space: nowrap; /* Metinleri kırma */
+    }
+
+    .info-cards {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-header h1 {
+        font-size: 1.3rem;
+    }
+
+    .main-header i {
+        font-size: 1.3rem;
+    }
+
+    .main-header p {
+        font-size: 0.85rem;
+    }
+
+    .calculator-section {
+        padding: 0.8rem;
+    }
+
+    .section-header-calc {
+        padding: 0.6rem 0.8rem;
+    }
+
+    .section-header-calc h2 {
+        font-size: 0.9rem;
+    }
+
+    .section-header-calc i {
+        font-size: 0.9rem;
+    }
+
+    /* Diploma container mobile */
+    .diploma-container {
+        gap: 1rem;
+        width: 100%;
+    }
+
+    .diploma-input-compact {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .input-field-compact {
+        width: 100%;
+        max-width: 150px;
+        font-size: 1.1rem;
+        padding: 0.5rem;
+    }
+
+    .switch-text {
+        font-size: 0.8rem;
+    }
+
+    .toggle-switch {
+        width: 50px;
+        height: 26px;
+    }
+
+    .toggle-slider:before {
+        height: 18px;
+        width: 18px;
+    }
+
+    .toggle-switch input:checked + .toggle-slider:before {
+        transform: translateX(24px);
+    }
+
+    .info-text {
+        font-size: 0.7rem;
+    }
+
+    /* 4 ders tek satırda mobilde */
+    .test-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.5rem;
+    }
+
+    .test-card {
+        padding: 0.5rem;
+    }
+
+    .test-card h3 {
+        font-size: 0.65rem;
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.3rem;
+    }
+
+    .input-group {
+        margin-bottom: 0.3rem;
+    }
+
+    .input-group label {
+        font-size: 0.65rem;
+    }
+
+    .input-mini {
+        width: 30px;
+        padding: 0.15rem;
+        font-size: 0.7rem;
+    }
+
+    .net-display {
+        font-size: 0.65rem;
+        padding: 0.3rem;
+        margin-top: 0.3rem;
+    }
+
+    .net-value {
+        font-size: 0.75rem;
+    }
+
+    .calculate-btn {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.95rem;
+    }
+
+    .calculate-btn i {
+        font-size: 0.95rem;
+    }
+
+    .table-wrapper {
+        margin: 0.5rem -0.8rem; /* Negatif margin ile tam genişlik */
+        padding: 0 0.8rem;
+    }
+
+    .results-table {
+        font-size: 0.65rem;
+        min-width: 500px; /* Mobil için optimize */
+    }
+
+    .results-table th,
+    .results-table td {
+        padding: 0.4rem 0.25rem;
+        white-space: nowrap;
+    }
+    
+    .results-table th {
+        font-size: 0.6rem;
+    }
+    
+    .year-result {
+        padding: 0.8rem;
+    }
+    
+    .year-title {
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Loading Animation */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Smooth Scroll */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #121b7e;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #0d1557;
+}
+
+/* === Minimal override: tek çizgi sistemi & net hiyerarşi === */
+
+/* 0) İnce, tutarlı çizgi rengi */
+:root{
+  --line:#e5e7eb;         /* açık gri */
+  --brand:#121b7e;        /* mavi */
+  --accent:#FF9800;       /* turuncu */
+  --bg-soft:#f9fafb;      /* yumuşak arkaplan */
+  --text:#111827;         /* metin */
+}
+
+/* 1) Ana başlık: çerçeveyi incelt, dolgunluk kalsın */
+.main-header{
+  border: 1px solid var(--brand);
+  margin-bottom: 1.25rem;
+}
+.main-header h1{ font-size: 1.9rem; }
+.main-header p{ opacity: .95; }
+
+/* 2) Section header: kutu arkaplanı kaldır, tek alt çizgi bırak */
+.section-header-calc{
+  background: transparent;
+  color: var(--brand);
+  padding: .75rem 0;
+  border-radius: 0;
+  margin-bottom: 1rem;
+  border: none;
+  border-bottom: 1px solid var(--line); /* sadece alt çizgi */
+  gap: .5rem;
+}
+.section-header-calc i{ font-size: 1rem; }
+.section-header-calc h2{ font-size: 1.1rem; font-weight: 700; }
+
+/* TYT/AYT/Results özel renk vurgusu yerine tek sistem */
+.tyt-header, .ayt-header{ border-left: none; }
+.results-header{
+  background: transparent;
+  color: var(--accent);
+  border-bottom: 1px solid var(--accent);
+}
+
+/* 3) Bölüm kapsayıcı: kenarı incelt, padding’i hafif kıs */
+.calculator-section{
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+/* 4) Kart başlıkları: alt çizgiyi kaldır (çizgi kalabalığını azalt) */
+.test-card{
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: .9rem;
+}
+.test-card h3{
+  border-bottom: 0;
+  margin-bottom: .5rem;
+  padding-bottom: 0;
+  font-size: .9rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* 5) Alt başlık (subsection): kısa vurgu çizgisi */
+.subsection{ margin-bottom: 1rem; }
+.subsection-title{
+  border: none;
+  position: relative;
+  padding-bottom: .35rem;
+  margin-bottom: .75rem;
+  font-size: .95rem;
+}
+.subsection-title::after{
+  content:"";
+  display:block;
+  width: 56px; height: 2px;
+  background: var(--brand);
+  margin-top: .35rem;
+}
+
+/* 6) Form elemanları: mavi 2px kenar → 1px nötr; focus’ta renkli */
+.input-field-compact{
+  border: 1px solid var(--line);
+}
+.input-field-compact:focus{
+  border-color: var(--brand);
+  box-shadow: 0 0 0 2px rgb(18 27 126 / 12%);
+}
+.input-mini{
+  border: 1px solid var(--line);
+}
+.input-mini:focus{
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgb(255 152 0 / 15%);
+}
+
+/* 7) Net alanı: daha sessiz */
+.net-display{
+  background: var(--bg-soft);
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* 8) Bilgi kutusu: ince şerit, yumuşak arka plan */
+.info-box{
+  background: #fffaf3;
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+}
+
+/* 9) Sonuç kartı & tablo: çift kenarı engelle, 1px çizgi kullan */
+.year-result{
+  border: 1px solid var(--line);
+  padding: 1.25rem;
+}
+.results-table{
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.results-table thead{
+  background: var(--bg-soft);
+  color: var(--text);
+}
+.results-table th{
+  font-weight: 700;
+}
+.results-table td{
+  border-bottom: 1px solid var(--line);
+}
+.results-table tbody tr:nth-child(even){
+  background: #fff; /* zebra yerine tek ton */
+}
+
+/* 10) Buton: çerçeveyi incelt, hover’da sadece renk değişimi */
+.calculate-btn{
+  border: 1px solid var(--brand);
+  padding: .9rem 2.2rem;
+  font-size: 1.05rem;
+}
+.calculate-btn:hover{
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* 11) Izgara: küçük ekranlarda aşırı sütunları azalt */
+.test-grid{ gap: .8rem; }
+@media (max-width: 768px){
+  .section-header-calc{ margin-bottom: .85rem; }
+  .calculator-section{ padding: 1rem; }
+  .test-grid{ grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px){
+  /* 4 dersin tek satıra zorlanması yerine 2'li ızgara daha okunur */
+  .test-grid{ grid-template-columns: repeat(2, 1fr); gap: .6rem; }
+  .test-card{ padding: .6rem; }
+  .input-mini{ width: 38px; }
+}
+
+/* ========================================
+   SEO Content Section Styles
+   ======================================== */
+
+.seo-content-section {
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 12px;
+}
+
+.content-article {
+    background: white;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    line-height: 1.8;
+}
+
+.content-article:last-child {
+    margin-bottom: 0;
+}
+
+.content-main-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #121b7e;
+    margin-bottom: 1.5rem;
+    line-height: 1.3;
+}
+
+.content-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #121b7e;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.content-intro {
+    font-size: 1.05rem;
+    margin-bottom: 1rem;
+}
+
+.content-article p {
+    color: #444;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+.content-article p:last-child {
+    margin-bottom: 0;
+}
+
+/* Formula Box */
+.formula-box {
+    background: #f5f7fa;
+    border-left: 4px solid #121b7e;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 8px;
+}
+
+.formula-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #121b7e;
+    margin-bottom: 1rem;
+}
+
+.formula-code {
+    display: block;
+    background: white;
+    padding: 1rem;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    color: #333;
+    overflow-x: auto;
+    white-space: pre;
+    border: 1px solid #e0e0e0;
+}
+
+.content-note {
+    background: #fff3cd;
+    border-left: 4px solid #ff9800;
+    padding: 1rem;
+    margin-top: 1.5rem;
+    border-radius: 6px;
+    font-size: 0.95rem;
+}
+
+.content-note i {
+    color: #ff9800;
+    margin-right: 0.5rem;
+}
+
+/* Puan Türü Cards */
+.puan-turu-card {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #121b7e;
+    transition: all 0.3s ease;
+}
+
+.puan-turu-card:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(18, 27, 126, 0.1);
+}
+
+.puan-turu-card h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #121b7e;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.puan-turu-card h3 i {
+    font-size: 1.3rem;
+}
+
+.puan-turu-card p {
+    color: #555;
+    margin: 0;
+}
+
+/* FAQ Section */
+.faq-item-custom {
+    background: white;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+.faq-item-custom:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-color: #121b7e;
+}
+
+.faq-question {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #121b7e;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.faq-question i {
+    color: #ff9800;
+    margin-top: 0.2rem;
+}
+
+.faq-answer {
+    color: #555;
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* CTA Content Box */
+.cta-content-box {
+    background: linear-gradient(135deg, #121b7e 0%, #1e2a9e 100%);
+    padding: 3rem 2rem;
+    border-radius: 12px;
+    text-align: center;
+    color: white;
+    margin-top: 2rem;
+    box-shadow: 0 8px 24px rgba(18, 27, 126, 0.2);
+}
+
+.cta-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.cta-content-box h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.cta-content-box p {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.95;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    color: white;
+}
+
+.cta-content-button {
+    background: #ff9800;
+    color: white;
+    padding: 1rem 2.5rem;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+}
+
+.cta-content-button:hover {
+    background: #f57c00;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 152, 0, 0.4);
+}
+
+.cta-content-button i {
+    margin-right: 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .seo-content-section {
+        padding: 1rem;
+        margin: 2rem auto;
+    }
+
+    .content-article {
+        padding: 1.5rem;
+    }
+
+    .content-main-title {
+        font-size: 1.5rem;
+    }
+
+    .content-title {
+        font-size: 1.3rem;
+    }
+
+    .formula-code {
+        font-size: 0.8rem;
+    }
+
+    .puan-turu-card {
+        padding: 1rem;
+    }
+
+    .cta-content-box {
+        padding: 2rem 1.5rem;
+    }
+
+    .cta-content-box h3 {
+        font-size: 1.5rem;
+    }
+
+    .cta-content-box p {
+        font-size: 1rem;
+    }
+
+    .cta-content-button {
+        padding: 0.9rem 2rem;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .content-main-title {
+        font-size: 1.3rem;
+    }
+
+    .content-title {
+        font-size: 1.15rem;
+    }
+
+    .content-article {
+        padding: 1rem;
+    }
+
+    .formula-box {
+        padding: 1rem;
+    }
+
+    .puan-turu-card {
+        padding: 0.8rem;
+    }
+
+    .faq-item-custom {
+        padding: 1rem;
+    }
+
+    .faq-question {
+        font-size: 1rem;
+    }
+
+    .cta-content-box {
+        padding: 1.5rem 1rem;
+    }
+
+    .cta-icon {
+        font-size: 2.5rem;
+    }
+
+    .cta-content-box h3 {
+        font-size: 1.3rem;
+    }
+
+    .cta-content-button {
+        width: 100%;
+        padding: 1rem;
+    }
+}
+
+/* ========================================
+   Ad Slider Styles (Reklam Slider)
+   ======================================== */
+
+.ad-slider-container {
+    position: relative;
+    max-width: 1400px;
+    max-height: 400px;
+    margin: 2rem auto;
+    overflow: hidden;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.ad-slider {
+    display: flex;
+    width: 100%;
+    height: auto;
+    position: relative;
+    max-height: 500px;
+}
+
+.ad-slide {
+    width: 100%;
+    flex-shrink: 0;
+    display: none;
+    transition: opacity 0.5s ease;
+}
+
+.ad-slide.active {
+    display: block;
+}
+
+.ad-slide a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.ad-slide img {
+    width: 100%;
+    height: 100%;
+    max-height: 500px;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+.slider-dots {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.dot.active {
+    background-color: white;
+}
+
+.slider-prev, .slider-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+    border: none;
+    padding: 15px;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+    z-index: 10;
+}
+
+.slider-prev:hover, .slider-next:hover {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.slider-prev {
+    left: 15px;
+}
+
+.slider-next {
+    right: 15px;
+}
+
+/* Responsive Slider */
+@media (max-width: 768px) {
+    .ad-slider-container {
+        max-height: 250px;
+        margin: 1.5rem auto;
+        border-radius: 10px;
+    }
+    
+    .ad-slider, .ad-slide img {
+        max-height: 180px;
+    }
+    
+    .ad-slide img {
+        object-fit: cover;
+        object-position: center;
+    }
+    
+    .slider-prev, .slider-next {
+        padding: 10px;
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    .slider-dots {
+        bottom: 10px;
+    }
+    
+    .dot {
+        width: 10px;
+        height: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .ad-slider-container {
+        max-height: 200px;
+        margin: 1rem auto;
+        border-radius: 8px;
+        width: 100%;
+    }
+    
+    .ad-slider, .ad-slide img {
+        max-height: 150px;
+        object-fit: cover;
+    }
+    
+    .ad-slide img {
+        object-position: center;
+    }
+    
+    .slider-prev, .slider-next {
+        padding: 8px;
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+    }
+    
+    .slider-dots {
+        bottom: 5px;
+        gap: 5px;
+    }
+    
+    .dot {
+        width: 8px;
+        height: 8px;
+    }
+}
+
+/* ========================================
+   SEO Info Section (Footer Üstü)
+   ======================================== */
+
+.seo-info {
+    background: #f8f9fa;
+    padding: 3rem 2rem;
+    margin: 2rem 0 0 0;
+}
+
+.seo-info-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.seo-info h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #121b7e;
+    margin-bottom: 1.5rem;
+}
+
+.seo-info p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #555;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .seo-info {
+        padding: 2rem 1.5rem;
+    }
+
+    .seo-info h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .seo-info p {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .seo-info {
+        padding: 1.5rem 1rem;
+    }
+
+    .seo-info h2 {
+        font-size: 1.3rem;
+    }
+
+    .seo-info p {
+        font-size: 0.95rem;
+    }
+}
+
+

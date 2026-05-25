@@ -1,0 +1,8 @@
+# İsteğe bağlı: Render.com üzerinden "Blueprint" ile deploy
+services:
+  - type: web
+    name: net-pusula
+    runtime: docker
+    plan: free
+    healthCheckPath: /yks/health
+    autoDeploy: true

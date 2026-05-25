@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Net Pusula — ÖSYM katsayıları ve yığılma verileriyle YKS puan ve sıralama hesaplama. TYT, AYT, OBP.">
+    <title>Net Pusula — YKS Puan Hesaplama</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text x='12' y='68' font-family='Georgia,serif' font-size='52' font-style='italic' fill='%23c9a962'>N</text><text x='48' y='68' font-family='system-ui' font-size='44' font-weight='600' fill='%233d9eff'>P</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="assets/net-pusula.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="#" class="brand wordmark" aria-label="Net Pusula — Ana sayfa">
+                <span class="wordmark-line">
+                    <span class="wm-net">Net</span><span class="wm-pusula">Pusula</span>
+                </span>
+                <span class="wm-sub">YKS puan &amp; sıralama</span>
+            </a>
+            <nav class="nav-links" aria-label="Ana menü">
+                <a href="#hesapla">Hesapla</a>
+                <a href="#sonuclar">Sonuçlar</a>
+                <a href="#yasal">Yasal</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <span class="hero-badge"><i class="fas fa-shield-halved"></i> Resmi katsayı verileri</span>
+        <h1>YKS puanını netlerinden hesapla</h1>
+        <p>2022–2025 katsayı ve yığılma tablolarıyla ham puan, yerleştirme puanı ve tahmini sıralama — sade, hızlı, güvenilir.</p>
+        <div class="trust-row">
+            <span class="trust-item"><i class="fas fa-check-circle"></i> Anlık net hesabı</span>
+            <span class="trust-item"><i class="fas fa-check-circle"></i> OBP & yerleşme düzeltmesi</span>
+            <span class="trust-item"><i class="fas fa-check-circle"></i> 5 puan türü, 4 yıl</span>
+        </div>
+    </section>
+
+    <section class="intro-manifesto" aria-labelledby="intro-heading">
+        <div class="intro-inner">
+            <p id="intro-heading" class="intro-lead">Netlerinizin rotasını birlikte çiziyoruz.</p>
+            <p class="intro-body">
+                <strong>Net Pusula</strong>, deneme ve sınav sonrası belirsizliği sayıya döken sakin bir rehberdir:
+                doğru–yanlıştan nete, katsayılardan puan ve sıralama tahminine — tek ekranda, şeffaf ve okunaklı.
+            </p>
+        </div>
+    </section>
+
+    <div class="legal-strip" role="note">
+        <i class="fas fa-scale-balanced" aria-hidden="true"></i>
+        <p>Net Pusula, <strong>ÖSYM veya herhangi bir resmî kurumla bağlantılı değildir</strong>. Gösterilen sonuçlar bilgilendirme amaçlı tahmindir.</p>
+        <a href="#yasal" class="legal-strip-link">Yasal bilgi →</a>
+    </div>
+
+    <div class="content-layout">
+        <div class="main-column">
+    <main class="main" id="hesapla">
+        <section class="panel">
+            <div class="panel-header diploma">
+                <i class="fas fa-graduation-cap"></i>
+                <h2>Diploma & OBP</h2>
+            </div>
+            <div class="diploma-row">
+                <div class="field">
+                    <label for="obp">Diploma notu (100 üzerinden)</label>
+                    <input type="number" id="obp" min="0" max="100" step="0.1" value="85">
+                </div>
+                <label class="toggle-wrap">
+                    <input type="checkbox" id="previousPlacement">
+                    <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                    <span class="toggle-label">Geçen sene bir programa yerleştim (OBP yarım)</span>
+                </label>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-header tyt">
+                <i class="fas fa-book"></i>
+                <h2>TYT</h2>
+                <span>Temel Yeterlilik</span>
+            </div>
+            <div class="test-grid" id="tytGrid">
+                <!-- tyt cards injected below via same structure -->
+            </div>
+        </section>
+
+        <section class="panel" id="aytPanel">
+            <div class="panel-header ayt">
+                <i class="fas fa-flask"></i>
+                <h2>AYT & YDT</h2>
+                <span>Alan testleri</span>
+                <button type="button" class="panel-toggle" id="aytToggleBtn" aria-expanded="true" aria-controls="aytPanelBody" title="AYT bölümünü daralt/genişlet">
+                    <i class="fas fa-chevron-up"></i>
+                </button>
+            </div>
+            <div id="aytPanelBody" class="ayt-panel-body">
+            <p class="subsection-title">Sözel 1</p>
+            <div class="test-grid" id="aytSoz1"></div>
+            <p class="subsection-title">Sözel 2</p>
+            <div class="test-grid" id="aytSoz2"></div>
+            <p class="subsection-title">Sayısal</p>
+            <div class="test-grid" id="aytSay"></div>
+            <p class="subsection-title">Yabancı dil</p>
+            <div class="test-grid" id="aytYdt"></div>
+            </div>
+        </section>
+
+        <div class="calc-cta">
+            <button type="button" id="calculateBtn" class="btn-calc">
+                <i class="fas fa-calculator"></i> Puanı hesapla
+            </button>
+            <p class="calc-hint">Doğru ve yanlış girdikçe netler anında güncellenir.</p>
+        </div>
+
+        <section id="resultsSection" class="panel results-panel">
+            <div class="panel-header results">
+                <i class="fas fa-chart-line"></i>
+                <h2 id="sonuclar">Sonuçlar</h2>
+            </div>
+            <div class="disclaimer">
+                Bu tablo <strong>tahmini</strong> değerler içerir; bağlayıcı değildir. Tercih ve başvuru kararlarınızda yalnızca ÖSYM’nin resmi sonuç belgelerini esas alın.
+                <a href="#yasal">Ayrıntılı yasal uyarılar</a>
+            </div>
+            <div id="resultsContainer"></div>
+        </section>
+    </main>
+        </div>
+
+        <aside class="settings-rail" aria-label="Hızlı ayarlar">
+            <div class="settings-card">
+                <h3 class="settings-title">Hızlı ayarlar</h3>
+                <label class="setting-row">
+                    <input type="checkbox" id="settingAutoRecalc" checked>
+                    <span class="setting-text">
+                        <strong>Otomatik güncelle</strong>
+                        <small>Net değişince sonuçları yenile</small>
+                    </span>
+                </label>
+                <label class="setting-row">
+                    <input type="checkbox" id="settingScrollResults" checked>
+                    <span class="setting-text">
+                        <strong>Sonuçlara kaydır</strong>
+                        <small>Hesap sonrası tabloya git</small>
+                    </span>
+                </label>
+                <label class="setting-row">
+                    <input type="checkbox" id="settingAytCollapsed">
+                    <span class="setting-text">
+                        <strong>AYT’yi daralt</strong>
+                        <small>Alan testlerini gizle</small>
+                    </span>
+                </label>
+                <button type="button" class="btn-secondary" id="resetAllBtn">
+                    <i class="fas fa-rotate-left"></i> Tüm netleri sıfırla
+                </button>
+            </div>
+        </aside>
+    </div>
+
+    <section class="legal-panel" id="yasal" aria-labelledby="legal-heading">
+        <div class="legal-panel-inner">
+            <h2 id="legal-heading">Yasal uyarılar ve sorumluluk reddi</h2>
+            <div class="legal-grid">
+                <article class="legal-item">
+                    <h3>Resmî bağlantı yoktur</h3>
+                    <p>Net Pusula; ÖSYM, YÖK, Millî Eğitim Bakanlığı veya herhangi bir kamu kurumu adına hareket etmez ve bu kurumlar tarafından onaylanmaz. Marka ve içerik, bağımsız bir bilgilendirme aracıdır.</p>
+                </article>
+                <article class="legal-item">
+                    <h3>Tahmini sonuçlar</h3>
+                    <p>Puan, sıralama ve tüm çıktılar yayımlanmış katsayı ile yığılma tablolarına dayalı <strong>matematiksel tahmindir</strong>. Gerçek sınav puanı, standart sapma, soru iptali ve ÖSYM’nin resmi açıklamaları farklılık yaratabilir. Tek ve bağlayıcı kaynak ÖSYM sonuç belgelerinizdir.</p>
+                </article>
+                <article class="legal-item">
+                    <h3>Sorumluluk reddi</h3>
+                    <p>Site sahibi ve geliştiriciler; hesaplama hataları, veri güncelliği, teknik kesintiler veya bu araçtaki bilgilere dayanarak alınan tercih, başvuru veya akademik kararlardan doğan doğrudan ya da dolaylı zararlardan <strong>sorumlu tutulamaz</strong>. Kullanım tamamen kullanıcının kendi sorumluluğundadır.</p>
+                </article>
+                <article class="legal-item">
+                    <h3>Kişisel veri</h3>
+                    <p>Girdiğiniz net ve diploma bilgileri sunucuda hesaplanır; pazarlama amaçlı profil oluşturulmaz. Kalıcı kayıt veya üçüncü taraf satışı yapılmaz. Tarayıcı ayarlarınız (tercihler) yalnızca cihazınızda saklanabilir.</p>
+                </article>
+                <article class="legal-item">
+                    <h3>Veri kaynakları ve telif</h3>
+                    <p>Katsayı ve yığılma verileri kamuya açık / yayımlanmış özet tablolardan derlenmiştir. ÖSYM ve ilgili hak sahiplerinin kullanım koşullarına uyum kullanıcıya aittir. Site arayüzü, metinleri ve kodu © Net Pusula — izinsiz ticari kopyalama yasaktır.</p>
+                </article>
+                <article class="legal-item">
+                    <h3>Eğitim amaçlı kullanım</h3>
+                    <p>Bu hizmet ücretsiz rehberlik sunar; hukuki, mali veya psikolojik danışmanlık yerine geçmez. Kriz veya acil durumlarda ilgili resmî kurumlara başvurun.</p>
+                </article>
+            </div>
+            <p class="legal-updated">Son güncelleme: Mayıs 2026 — Metinler önceden haber verilmeksizin güncellenebilir.</p>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <p class="footer-wordmark"><span class="wm-net">Net</span><span class="wm-pusula">Pusula</span></p>
+        <p class="footer-copy">© 2026 Net Pusula. Tüm hakları saklıdır.</p>
+        <p class="footer-note">Bu site bilgilendirme amaçlıdır; resmî YKS sonucu değildir.</p>
+        <nav class="footer-links" aria-label="Alt bilgi">
+            <a href="#hesapla">Hesapla</a>
+            <a href="#yasal">Yasal uyarılar</a>
+            <a href="#">Başa dön</a>
+        </nav>
+    </footer>
+
+    <div id="apiStatus" class="api-status" role="status" aria-live="polite"></div>
+
+    <script>
+        const CARD_GROUPS = {
+            tytGrid: [
+                { id: 'tyt_turk', max: 40, title: 'Türkçe' },
+                { id: 'tyt_sos', max: 20, title: 'Sosyal Bilimler' },
+                { id: 'tyt_mat', max: 40, title: 'Temel Matematik' },
+                { id: 'tyt_fen', max: 20, title: 'Fen Bilimleri' },
+            ],
+            aytSoz1: [
+                { id: 'ayt_ede', max: 24, title: 'Türk Dili ve Edebiyatı' },
+                { id: 'ayt_tar1', max: 10, title: 'Tarih 1' },
+                { id: 'ayt_cog1', max: 6, title: 'Coğrafya 1' },
+            ],
+            aytSoz2: [
+                { id: 'ayt_tar2', max: 11, title: 'Tarih 2' },
+                { id: 'ayt_cog2', max: 11, title: 'Coğrafya 2' },
+                { id: 'ayt_fel', max: 12, title: 'Felsefe Grubu' },
+                { id: 'ayt_din', max: 6, title: 'Din / DKAB' },
+            ],
+            aytSay: [
+                { id: 'ayt_mat', max: 40, title: 'Matematik' },
+                { id: 'ayt_fiz', max: 14, title: 'Fizik' },
+                { id: 'ayt_kim', max: 13, title: 'Kimya' },
+                { id: 'ayt_bio', max: 13, title: 'Biyoloji' },
+            ],
+            aytYdt: [
+                { id: 'ayt_ydt', max: 80, title: 'Yabancı Dil (YDT)' },
+            ],
+        };
+
+        function cardHtml({ id, max, title }) {
+            return `
+            <div class="test-card">
+                <h3>${title} <span class="meta">(${max} soru)</span></h3>
+                <div class="inputs-row">
+                    <div><label for="${id}_d">Doğru</label><input type="number" id="${id}_d" min="0" max="${max}" value="0"></div>
+                    <div><label for="${id}_y">Yanlış</label><input type="number" id="${id}_y" min="0" max="${max}" value="0"></div>
+                </div>
+                <div class="net-line"><span>Net</span><span id="${id}_net" class="net-value">0.00</span></div>
+            </div>`;
+        }
+
+        Object.entries(CARD_GROUPS).forEach(([gridId, items]) => {
+            document.getElementById(gridId).innerHTML = items.map(cardHtml).join('');
+        });
+    </script>
+    <script src="assets/calculator.js"></script>
+</body>
+</html>
