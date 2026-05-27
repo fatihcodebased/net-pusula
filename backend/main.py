@@ -94,6 +94,7 @@ def calculate(body: CalculateRequest):
 
 
 @app.get("/")
+@app.get("/index.html")
 def index():
     path = ROOT / "index.html"
     if not path.exists():
