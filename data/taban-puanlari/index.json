@@ -1,0 +1,39 @@
+{
+  "yillar": [
+    {
+      "yil": 2019,
+      "dosya": "data/taban-puanlari/2019.json",
+      "toplam_program": 22142
+    },
+    {
+      "yil": 2020,
+      "dosya": "data/taban-puanlari/2020.json",
+      "toplam_program": 20513
+    },
+    {
+      "yil": 2021,
+      "dosya": "data/taban-puanlari/2021.json",
+      "toplam_program": 21185
+    },
+    {
+      "yil": 2022,
+      "dosya": "data/taban-puanlari/2022.json",
+      "toplam_program": 21313
+    },
+    {
+      "yil": 2023,
+      "dosya": "data/taban-puanlari/2023.json",
+      "toplam_program": 21864
+    },
+    {
+      "yil": 2024,
+      "dosya": "data/taban-puanlari/2024.json",
+      "toplam_program": 21335
+    },
+    {
+      "yil": 2025,
+      "dosya": "data/taban-puanlari/2025.json",
+      "toplam_program": 21337
+    }
+  ]
+}

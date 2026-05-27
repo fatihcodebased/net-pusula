@@ -913,7 +913,7 @@ a:hover { text-decoration: underline; }
 }
 
 @media (max-width: 640px) {
-    .nav-links a:not([href="#hesapla"]) { display: none; }
+    .nav-links a:not([href="#hesapla"]):not([href="index.html#hesapla"]):not([href="taban-puanlari.html"]) { display: none; }
     .nav-links a[href="#yasal"] { display: inline; }
     .hero { padding-top: 2rem; }
     .panel { padding: 1.15rem; }

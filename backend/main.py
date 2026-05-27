@@ -101,6 +101,17 @@ def index():
     return FileResponse(path)
 
 
+@app.get("/taban-puanlari.html")
+def taban_puanlari():
+    path = ROOT / "taban-puanlari.html"
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="taban-puanlari.html bulunamadı")
+    return FileResponse(path)
+
+
 assets_dir = ROOT / "assets"
 if assets_dir.is_dir():
     app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
+
+if DATA_DIR.is_dir():
+    app.mount("/data", StaticFiles(directory=DATA_DIR), name="data")

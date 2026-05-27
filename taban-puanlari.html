@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Net Pusula — YKS taban puanları, başarı sıralamaları, kontenjanlar ve üniversite programları.">
+    <title>Net Pusula — YKS Taban Puanları</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text x='12' y='68' font-family='Georgia,serif' font-size='52' font-style='italic' fill='%23c9a962'>N</text><text x='48' y='68' font-family='system-ui' font-size='44' font-weight='600' fill='%233d9eff'>P</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="assets/net-pusula.css">
+    <link rel="stylesheet" href="assets/taban-puanlari.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="index.html" class="brand wordmark" aria-label="Net Pusula — Ana sayfa">
+                <span class="wordmark-line">
+                    <span class="wm-net">Net</span><span class="wm-pusula">Pusula</span>
+                </span>
+                <span class="wm-sub">YKS puan &amp; sıralama</span>
+            </a>
+            <nav class="nav-links" aria-label="Ana menü">
+                <a href="index.html#hesapla">Hesapla</a>
+                <a href="taban-puanlari.html">Taban Puanları</a>
+                <a href="#veri-notu">Veri Notu</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <span class="hero-badge"><i class="fas fa-table-list"></i> Üniversite program verileri</span>
+        <h1>YKS taban puanları ve başarı sıralamaları</h1>
+        <p>2019–2025 arası üniversite programlarını yıl, puan türü, şehir ve üniversite türüne göre filtreleyin.</p>
+        <div class="trust-row">
+            <span class="trust-item"><i class="fas fa-check-circle"></i> Tüm programlar</span>
+            <span class="trust-item"><i class="fas fa-check-circle"></i> Yıllara göre JSON veri</span>
+            <span class="trust-item"><i class="fas fa-check-circle"></i> Hızlı arama, filtreleme ve sıralama</span>
+        </div>
+    </section>
+
+    <main class="taban-page">
+        <section class="panel" aria-labelledby="taban-heading">
+            <div class="panel-header results">
+                <i class="fas fa-magnifying-glass-chart"></i>
+                <h2 id="taban-heading">Taban Puanları</h2>
+                <span>2019–2025</span>
+            </div>
+
+            <div class="disclaimer" id="veri-notu">
+                Veriler bilgilendirme amaçlıdır. Tercih ve başvuru kararlarınızda yalnızca ÖSYM ve YÖK tarafından yayımlanan resmî kaynakları esas alın.
+            </div>
+
+            <div class="taban-stats" aria-label="Taban puanları özet bilgileri">
+                <div class="taban-stat-card">
+                    <span>Toplam kayıt</span>
+                    <strong id="tabanTotalCount">-</strong>
+                </div>
+                <div class="taban-stat-card">
+                    <span>Filtrelenen</span>
+                    <strong id="tabanFilteredCount">-</strong>
+                </div>
+                <div class="taban-stat-card">
+                    <span>En yüksek taban puan</span>
+                    <strong id="tabanTopScore">-</strong>
+                </div>
+                <div class="taban-stat-card">
+                    <span>En iyi başarı sırası</span>
+                    <strong id="tabanBestRank">-</strong>
+                </div>
+            </div>
+
+            <div class="taban-toolbar" aria-label="Taban puanı filtreleri">
+                <div class="taban-field">
+                    <label for="tabanSearch">Arama</label>
+                    <input type="search" id="tabanSearch" placeholder="Üniversite, bölüm, fakülte veya program kodu">
+                </div>
+                <div class="taban-field">
+                    <label for="tabanYear">Yıl</label>
+                    <select id="tabanYear">
+                        <option value="2025" selected>2025</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                        <option value="2020">2020</option>
+                        <option value="2019">2019</option>
+                    </select>
+                </div>
+                <div class="taban-field">
+                    <label for="tabanScoreType">Puan türü</label>
+                    <select id="tabanScoreType">
+                        <option value="">Tüm puan türleri</option>
+                        <option value="SAY">SAY</option>
+                        <option value="EA">EA</option>
+                        <option value="SÖZ">SÖZ</option>
+                        <option value="DİL">DİL</option>
+                        <option value="TYT">TYT</option>
+                    </select>
+                </div>
+                <div class="taban-field">
+                    <label for="tabanCity">Şehir</label>
+                    <select id="tabanCity">
+                        <option value="">Tüm şehirler</option>
+                    </select>
+                </div>
+                <div class="taban-field">
+                    <label for="tabanUniType">Üniversite türü</label>
+                    <select id="tabanUniType">
+                        <option value="">Tüm üniversite türleri</option>
+                    </select>
+                </div>
+                <div class="taban-field">
+                    <label for="tabanSortBy">Sırala</label>
+                    <select id="tabanSortBy">
+                        <option value="taban_siralama" selected>Başarı sırası</option>
+                        <option value="taban_puan">Taban puan</option>
+                        <option value="tavan_puan">Tavan puan</option>
+                        <option value="kontenjan">Kontenjan</option>
+                        <option value="yerlesen">Yerleşen</option>
+                        <option value="universite">Üniversite adı</option>
+                        <option value="bolum">Bölüm adı</option>
+                    </select>
+                </div>
+                <div class="taban-field">
+                    <label for="tabanSortDirection">Sıralama yönü</label>
+                    <select id="tabanSortDirection">
+                        <option value="asc" selected>Küçükten büyüğe / En iyi sıra</option>
+                        <option value="desc">Büyükten küçüğe / En yüksek puan</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="taban-actions">
+                <p class="taban-summary" id="tabanSummary">Veri hazırlanıyor...</p>
+                <div class="taban-buttons">
+                    <button type="button" class="taban-button" id="tabanReset">Filtreleri temizle</button>
+                    <button type="button" class="taban-button" id="tabanPrev">Önceki</button>
+                    <button type="button" class="taban-button" id="tabanNext">Sonraki</button>
+                </div>
+            </div>
+
+            <div class="taban-table-wrap">
+                <table class="taban-table">
+                    <thead>
+                        <tr>
+                            <th>Kod</th>
+                            <th>Üniversite</th>
+                            <th>Bölüm</th>
+                            <th>Fakülte</th>
+                            <th>Şehir</th>
+                            <th>Tür</th>
+                            <th>Puan</th>
+                            <th>Kont.</th>
+                            <th>Yer.</th>
+                            <th>Taban Puan</th>
+                            <th>Tavan Puan</th>
+                            <th>Başarı Sırası</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabanTableBody"></tbody>
+                </table>
+                <div class="taban-status" id="tabanStatus">Veri yükleniyor...</div>
+            </div>
+        </section>
+
+        <section class="taban-note-grid" aria-label="Veri açıklamaları">
+            <div class="taban-note-card">
+                <strong>Kaynak yaklaşımı</strong>
+                <span>2019–2024 arşiv veri setinden, 2025 ise YÖK Atlas veri setinden normalize edilir.</span>
+            </div>
+            <div class="taban-note-card">
+                <strong>Eksik alanlar</strong>
+                <span>Kaynakta bulunmayan değerler tabloda tire işaretiyle gösterilir.</span>
+            </div>
+            <div class="taban-note-card">
+                <strong>Performans</strong>
+                <span>Veriler yıllara bölünmüş JSON dosyalarından seçilen yıla göre yüklenir.</span>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p class="footer-wordmark"><span class="wm-net">Net</span><span class="wm-pusula">Pusula</span></p>
+        <p class="footer-copy">© 2026 Net Pusula. Tüm hakları saklıdır.</p>
+        <p class="footer-note">Bu site bilgilendirme amaçlıdır; resmî YKS tercih sistemi değildir.</p>
+        <nav class="footer-links" aria-label="Alt bilgi">
+            <a href="index.html#hesapla">Hesapla</a>
+            <a href="taban-puanlari.html">Taban Puanları</a>
+            <a href="#">Başa dön</a>
+        </nav>
+    </footer>
+
+    <script src="assets/taban-puanlari.js"></script>
+</body>
+</html>

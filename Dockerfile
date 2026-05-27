@@ -8,6 +8,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY backend/ backend/
 COPY data/ data/
 COPY index.html .
+COPY taban-puanlari.html .
 COPY assets/ assets/
 
 ENV PORT=8000
