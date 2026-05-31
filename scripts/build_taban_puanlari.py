@@ -62,6 +62,7 @@ def to_float(value: Any) -> float | None:
 
 
 def pick_int_row(row: dict[str, str], stem: str, *, allow_zero: bool = False) -> int | None:
+    """Yalnızca tam sütun adıyla okur (ör. sira → sira2024). siraid gibi alanlara karışmaz."""
     for year in METRIC_YEARS:
         value = to_int(row.get(f"{stem}{year}"))
         if value is None:
@@ -83,6 +84,45 @@ def pick_float_row(row: dict[str, str], stem: str, *, allow_zero: bool = False) 
     return None
 
 
+def is_plausible_rank(sira: int, puan: float | None, kontenjan: int | None) -> bool:
+    """YÖK Atlas'ta okul-birincisi vb. için düşük kalan sıra değerlerini eler."""
+    if sira <= 0:
+        return False
+    if kontenjan and kontenjan >= 8 and sira < 250 and (puan is None or puan >= 280):
+        return False
+    return True
+
+
+def pick_placement_bundle(row: dict[str, str]) -> dict[str, Any]:
+    """Kontenjan, puan ve sıra aynı yıl sonekli sütunlardan birlikte alınır."""
+    for year in METRIC_YEARS:
+        kontenjan = to_int(row.get(f"kontenjan{year}"))
+        yerlesen = to_int(row.get(f"yerlesen{year}"))
+        puan = to_float(row.get(f"puan{year}"))
+        sira = to_int(row.get(f"sira{year}"))
+        maxpuan = to_float(row.get(f"maxpuan{year}"))
+
+        has_placement = any(value is not None for value in (puan, sira, yerlesen, kontenjan))
+        if not has_placement:
+            continue
+
+        if sira is not None and not is_plausible_rank(sira, puan, kontenjan):
+            continue
+
+        return {
+            "kontenjan": kontenjan,
+            "yerlesen": yerlesen,
+            "okul_birincisi_kontenjan": to_int(row.get(f"birinci{year}")),
+            "okul_birincisi_yerlesen": to_int(row.get(f"birinciyerlesen{year}")),
+            "taban_puan": puan,
+            "tavan_puan": maxpuan,
+            "taban_siralama": sira,
+            "yerlesme_veri_yili": int(year),
+        }
+
+    return {}
+
+
 def score_span(row: dict[str, str]) -> tuple[float | None, float | None]:
     score_012 = to_float(row.get("final_score_012"))
     score_018 = to_float(row.get("final_score_018"))
@@ -96,15 +136,47 @@ def score_span(row: dict[str, str]) -> tuple[float | None, float | None]:
 
 
 def rank_span(row: dict[str, str]) -> tuple[int | None, int | None]:
+    """Taban sıra = 0.12 dönemi; tavan sıra = en iyi (en düşük sayı) yerleşen sırası."""
     rank_012 = to_int(row.get("final_rank_012"))
     rank_018 = to_int(row.get("final_rank_018"))
-    if rank_012 is None and rank_018 is None:
-        return None, None
-    if rank_012 is None:
-        return rank_018, rank_018
-    if rank_018 is None:
-        return rank_012, rank_012
-    return rank_012, min(rank_012, rank_018)
+    taban_siralama = rank_012 if rank_012 is not None else rank_018
+
+    tavan_siralama: int | None = None
+    if rank_012 is not None and rank_018 is not None:
+        tavan_siralama = min(rank_012, rank_018)
+    elif rank_018 is not None:
+        tavan_siralama = rank_018
+    elif rank_012 is not None:
+        tavan_siralama = rank_012
+
+    return taban_siralama, tavan_siralama
+
+
+def metrics_from_archive_row(row: dict[str, str]) -> dict[str, Any]:
+    taban_puan, tavan_puan = score_span(row)
+    taban_siralama, tavan_siralama = rank_span(row)
+    return {
+        "kontenjan": to_int(row.get("total_quota")),
+        "yerlesen": to_int(row.get("total_enrolled")),
+        "taban_puan": taban_puan,
+        "tavan_puan": tavan_puan,
+        "taban_siralama": taban_siralama,
+        "tavan_siralama": tavan_siralama,
+        "yerlesme_veri_yili": to_int(row.get("year")),
+    }
+
+
+def build_archive_program_index(target_year: int = 2024) -> dict[str, dict[str, str]]:
+    rows = read_zip_csv(ARCHIVE_ZIP, "01_university_admissions_turkey_2019_2024.csv")
+    index: dict[str, dict[str, str]] = {}
+    for row in rows:
+        year = to_int(row.get("year"))
+        if year != target_year:
+            continue
+        code = clean_text(row.get("program_code"))
+        if code:
+            index[code] = row
+    return index
 
 
 def normalize_score_type(value: Any) -> str | None:
@@ -211,13 +283,15 @@ def build_2019_2024() -> dict[int, list[dict[str, Any]]]:
 
 def build_2025() -> list[dict[str, Any]]:
     rows = read_zip_csv(YOKATLAS_2025_ZIP, "yokatlas-dataset-2025-main/tum_bolumler.csv")
+    archive_2024 = build_archive_program_index(2024)
     records: list[dict[str, Any]] = []
 
     for row in rows:
+        program_kodu = clean_text(row.get("id"))
         record = base_record(2025, "yokatlas-dataset-2025-main.zip / tum_bolumler.csv")
         record.update(
             {
-                "program_kodu": clean_text(row.get("id")),
+                "program_kodu": program_kodu,
                 "universite": clean_text(row.get("universite")),
                 "fakulte": clean_text(row.get("fakulte")),
                 "bolum": clean_text(row.get("isim")),
@@ -226,16 +300,19 @@ def build_2025() -> list[dict[str, Any]]:
                 "puan_turu": normalize_score_type(row.get("tur")),
                 "ogretim_suresi": to_int(row.get("sure")),
                 "onlisans": clean_text(row.get("onlisans")) == "1",
-                "kontenjan": pick_int_row(row, "kontenjan", allow_zero=True),
-                "okul_birincisi_kontenjan": pick_int_row(row, "birinci", allow_zero=True),
-                "yerlesen": pick_int_row(row, "yerlesen", allow_zero=True),
-                "okul_birincisi_yerlesen": pick_int_row(row, "birinciyerlesen", allow_zero=True),
-                "taban_puan": pick_float_row(row, "puan"),
-                "tavan_puan": pick_float_row(row, "maxpuan"),
-                "taban_siralama": pick_int_row(row, "sira"),
                 "etiketler": clean_text(row.get("aciklama")),
             }
         )
+
+        if program_kodu and program_kodu in archive_2024:
+            record.update(metrics_from_archive_row(archive_2024[program_kodu]))
+            record["kaynak"] = (
+                "yokatlas-dataset-2025 (program listesi) + archive.zip 2024 yerleşme verisi"
+            )
+        else:
+            record.update(pick_placement_bundle(row))
+            record["kaynak"] = "yokatlas-dataset-2025-main.zip / tum_bolumler.csv"
+
         records.append(record)
 
     return records
@@ -246,7 +323,10 @@ def write_year(year: int, records: list[dict[str, Any]]) -> None:
         "yil": year,
         "son_guncelleme": "2026-05-31",
         "toplam_program": len(records),
-        "not": "2025 dosyası YÖK Atlas veri setindeki en güncel yerleşmiş yıl alanlarından normalize edilmiştir.",
+        "not": (
+            "2025 program listesi YÖK Atlas'tan; yerleşme metrikleri mümkün olduğunda "
+            "2024 arşiv kaydıyla eşleştirilmiştir (sıra/puan aynı yıldan)."
+        ),
         "programs": records,
     }
     target = OUT_DIR / f"{year}.json"

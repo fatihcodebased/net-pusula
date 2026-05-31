@@ -1,4 +1,4 @@
-const DATA_VERSION = '20260531';
+const DATA_VERSION = '20260531b';
 
 const state = {
     year: 2025,
@@ -144,9 +144,17 @@ function normalize(value) {
     return String(value || '').toLocaleLowerCase('tr-TR');
 }
 
+function updateYearNotice() {
+    if (!els.yearNotice) return;
+    const show = state.year === 2025;
+    els.yearNotice.hidden = !show;
+    els.yearNotice.classList.toggle('is-visible', show);
+}
+
 async function loadYear(year) {
     state.year = Number(year);
     state.page = 1;
+    updateYearNotice();
     els.status.textContent = 'Veri yükleniyor...';
     els.tableBody.innerHTML = '';
 
@@ -350,6 +358,7 @@ window.addEventListener('DOMContentLoaded', () => {
     els.filteredCount = document.getElementById('tabanFilteredCount');
     els.topScore = document.getElementById('tabanTopScore');
     els.bestRank = document.getElementById('tabanBestRank');
+    els.yearNotice = document.getElementById('tabanYearNotice');
 
     const tableScroll = document.getElementById('tabanTableScroll');
     const tableWrap = document.getElementById('tabanTableWrap');

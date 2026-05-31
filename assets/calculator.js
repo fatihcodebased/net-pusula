@@ -257,24 +257,6 @@ function fmtSira(n) {
     return n != null ? Number(n).toLocaleString('tr-TR') : '—';
 }
 
-function setApiStatus(ok, text) {
-    const el = document.getElementById('apiStatus');
-    if (!el) return;
-    el.textContent = text;
-    el.className = 'api-status show ' + (ok ? 'ok' : 'err');
-}
-
-async function checkAPIHealth() {
-    try {
-        const res = await fetch(`${API_URL}/yks/health`);
-        if (res.ok) {
-            setApiStatus(true, 'Hesaplama motoru hazır');
-            return;
-        }
-    } catch (_) { /* ignore */ }
-    setApiStatus(false, 'Sunucu bağlantısı yok');
-}
-
 function initSettingsUI() {
     loadSettings();
 
@@ -328,6 +310,4 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('previousPlacement')?.addEventListener('change', scheduleRecalc);
 
     document.getElementById('calculateBtn')?.addEventListener('click', () => hesaplaVeGoster(false));
-
-    checkAPIHealth();
 });
