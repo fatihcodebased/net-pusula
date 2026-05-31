@@ -6,13 +6,7 @@
     padding: 0 1.5rem;
 }
 
-.taban-toolbar {
-    display: grid;
-    grid-template-columns: 1.5fr repeat(6, minmax(130px, 1fr));
-    gap: 0.85rem;
-    margin-bottom: 1rem;
-}
-
+/* Özet kartları */
 .taban-stats {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -24,17 +18,24 @@
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     background:
+        linear-gradient(145deg, rgba(201, 169, 98, 0.06), transparent 50%),
         linear-gradient(135deg, rgba(61, 158, 255, 0.08), transparent 55%),
         var(--bg-elevated);
-    padding: 1rem;
+    padding: 1rem 1.05rem;
+    transition: border-color 0.25s, transform 0.25s;
+}
+
+.taban-stat-card:hover {
+    border-color: rgba(61, 158, 255, 0.22);
+    transform: translateY(-1px);
 }
 
 .taban-stat-card span {
     display: block;
     color: var(--text-muted);
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     font-weight: 800;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     margin-bottom: 0.35rem;
 }
@@ -43,13 +44,31 @@
     color: var(--text);
     font-size: 1.15rem;
     letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Filtre araç çubuğu */
+.taban-toolbar {
+    display: grid;
+    grid-template-columns: 1.5fr repeat(6, minmax(130px, 1fr));
+    gap: 0.85rem;
+    margin-bottom: 1rem;
+    padding: 1.1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
+        var(--surface);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .taban-field label {
     display: block;
-    font-size: 0.76rem;
+    font-size: 0.72rem;
     font-weight: 700;
     color: var(--text-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     margin-bottom: 0.4rem;
 }
 
@@ -57,14 +76,24 @@
 .taban-field select {
     width: 100%;
     min-height: 42px;
-    padding: 0.68rem 0.8rem;
+    padding: 0.68rem 0.85rem;
     border-radius: var(--radius-sm);
     border: 1px solid var(--border);
     background: var(--bg-elevated);
     color: var(--text);
     font: inherit;
     outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.taban-field input::placeholder {
+    color: var(--text-dim);
+}
+
+.taban-field input:hover,
+.taban-field select:hover {
+    border-color: rgba(255, 255, 255, 0.12);
+    background: var(--surface-hover);
 }
 
 .taban-field input:focus,
@@ -73,6 +102,7 @@
     box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
+/* Sayfalama */
 .taban-actions {
     display: flex;
     flex-wrap: wrap;
@@ -80,6 +110,10 @@
     align-items: center;
     justify-content: space-between;
     margin: 1rem 0;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-elevated);
 }
 
 .taban-summary {
@@ -90,82 +124,155 @@
 
 .taban-buttons {
     display: flex;
-    gap: 0.6rem;
+    flex-wrap: wrap;
+    gap: 0.55rem;
 }
 
 .taban-button {
-    padding: 0.6rem 0.85rem;
+    padding: 0.58rem 1rem;
     border-radius: var(--radius-sm);
     border: 1px solid var(--border);
-    background: var(--bg-elevated);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent), var(--surface);
     color: var(--text-muted);
     font: inherit;
     font-size: 0.82rem;
     font-weight: 700;
     cursor: pointer;
+    transition: color 0.2s, border-color 0.2s, background 0.2s, box-shadow 0.2s;
 }
 
 .taban-button:hover:not(:disabled) {
     color: var(--text);
     border-color: var(--border-focus);
     background: var(--surface-hover);
+    box-shadow: 0 0 20px var(--accent-soft);
+}
+
+.taban-button:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
 .taban-button:disabled {
-    opacity: 0.45;
+    opacity: 0.4;
     cursor: not-allowed;
+}
+
+#tabanNext {
+    border-color: rgba(61, 158, 255, 0.35);
+    color: var(--text);
+}
+
+/* Tablo kabı — ince kaydırma çubuğu */
+.taban-table-scroll {
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-elevated);
+    overflow: hidden;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.taban-table-scroll::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 2.5rem;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgba(6, 8, 15, 0.85));
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.taban-table-scroll.is-scrollable::after {
+    opacity: 1;
 }
 
 .taban-table-wrap {
     overflow-x: auto;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(61, 158, 255, 0.35) transparent;
+}
+
+.taban-table-wrap::-webkit-scrollbar {
+    height: 6px;
+}
+
+.taban-table-wrap::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 0 0.5rem;
+}
+
+.taban-table-wrap::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, rgba(61, 158, 255, 0.25), rgba(201, 169, 98, 0.35));
+    border-radius: 999px;
+}
+
+.taban-table-wrap::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(90deg, rgba(61, 158, 255, 0.45), rgba(201, 169, 98, 0.5));
 }
 
 .taban-table {
     width: 100%;
-    min-width: 1080px;
+    min-width: 960px;
     border-collapse: collapse;
     font-size: 0.82rem;
 }
 
 .taban-table th,
 .taban-table td {
-    padding: 0.65rem 0.75rem;
+    padding: 0.7rem 0.8rem;
     border-bottom: 1px solid var(--border);
     text-align: left;
     vertical-align: top;
 }
 
-.taban-table th {
+.taban-table thead th {
     position: sticky;
     top: 0;
-    background: var(--bg-elevated);
+    z-index: 2;
+    background: linear-gradient(180deg, #141b28 0%, var(--bg-elevated) 100%);
     color: var(--text-muted);
+    font-size: 0.68rem;
     font-weight: 800;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
     white-space: nowrap;
+    box-shadow: 0 1px 0 var(--border);
 }
 
-.taban-table th:nth-child(10),
-.taban-table th:nth-child(11),
-.taban-table th:nth-child(12) {
+.taban-table thead th:nth-child(10),
+.taban-table thead th:nth-child(11),
+.taban-table thead th:nth-child(12) {
     color: var(--text);
+}
+
+.taban-table tbody tr {
+    transition: background 0.22s ease;
+}
+
+.taban-table tbody tr:hover td {
+    background: rgba(61, 158, 255, 0.06);
+}
+
+.taban-table tbody tr:hover td.col-highlight {
+    background: rgba(61, 158, 255, 0.1);
+    color: #f4f7fc;
 }
 
 .taban-table td:nth-child(2),
 .taban-table td:nth-child(3) {
-    min-width: 210px;
+    min-width: 180px;
+    max-width: 260px;
 }
 
-.taban-table td:nth-child(10),
-.taban-table td:nth-child(12) {
+.taban-table td.col-highlight {
     color: var(--text);
-}
-
-.taban-table tbody tr:hover td {
-    background: var(--surface-hover);
+    font-weight: 700;
 }
 
 .taban-table tr:last-child td {
@@ -175,11 +282,11 @@
 .taban-table .numeric {
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
-    font-weight: 700;
+    font-weight: 600;
 }
 
 .taban-status {
-    padding: 1rem;
+    padding: 1.25rem;
     color: var(--text-muted);
     text-align: center;
     font-weight: 600;
@@ -197,6 +304,11 @@
     border-radius: var(--radius-sm);
     background: var(--bg-elevated);
     padding: 1rem;
+    transition: border-color 0.2s;
+}
+
+.taban-note-card:hover {
+    border-color: rgba(61, 158, 255, 0.2);
 }
 
 .taban-note-card strong {
@@ -208,6 +320,66 @@
 .taban-note-card span {
     color: var(--text-muted);
     font-size: 0.82rem;
+    line-height: 1.55;
+}
+
+/* Mobil: kart düzeni */
+@media (max-width: 768px) {
+    .taban-table-scroll::after {
+        display: none;
+    }
+
+    .taban-table-wrap {
+        overflow-x: visible;
+    }
+
+    .taban-table {
+        min-width: 0;
+    }
+
+    .taban-table thead {
+        display: none;
+    }
+
+    .taban-table tbody tr {
+        display: block;
+        margin-bottom: 0.75rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+        background: var(--surface);
+    }
+
+    .taban-table tbody tr:hover td {
+        background: transparent;
+    }
+
+    .taban-table tbody td {
+        display: grid;
+        grid-template-columns: minmax(90px, 38%) 1fr;
+        gap: 0.5rem 0.75rem;
+        padding: 0.55rem 0.85rem;
+        border-bottom: 1px solid var(--border);
+        min-width: 0;
+        max-width: none;
+    }
+
+    .taban-table tbody td::before {
+        content: attr(data-label);
+        font-size: 0.68rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+    }
+
+    .taban-table tbody td:last-child {
+        border-bottom: none;
+    }
+
+    .taban-table tbody td.col-highlight {
+        background: rgba(61, 158, 255, 0.05);
+    }
 }
 
 @media (max-width: 960px) {
@@ -235,6 +407,7 @@
 
     .taban-toolbar {
         grid-template-columns: 1fr;
+        padding: 0.9rem;
     }
 
     .taban-stats {

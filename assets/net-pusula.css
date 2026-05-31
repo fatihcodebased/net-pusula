@@ -814,8 +814,97 @@ a:hover { text-decoration: underline; }
     position: relative;
     z-index: 1;
     border-top: 1px solid var(--border);
-    padding: 2rem 1.5rem;
+    padding: 2rem 1.5rem 2.25rem;
     text-align: center;
+}
+
+/* Geliştirici imzası — minimal F */
+.creator-signature {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.45rem;
+    margin-bottom: 1.35rem;
+    pointer-events: none;
+    user-select: none;
+}
+
+.signature-f {
+    position: relative;
+    width: 3.25rem;
+    height: 3.25rem;
+    display: grid;
+    place-items: center;
+}
+
+.signature-f-letter {
+    position: relative;
+    z-index: 1;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 2.35rem;
+    font-weight: 600;
+    font-style: italic;
+    line-height: 1;
+    color: #ffffff;
+    text-shadow: 0 0 28px rgba(255, 255, 255, 0.18);
+    animation: signature-breathe 5.5s ease-in-out infinite;
+}
+
+.signature-f-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: radial-gradient(circle at 35% 30%, rgba(61, 158, 255, 0.14), transparent 58%);
+    animation: signature-ring 7s ease-in-out infinite;
+}
+
+.signature-f-ring::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: conic-gradient(
+        from 210deg,
+        transparent 0deg,
+        rgba(201, 169, 98, 0.35) 80deg,
+        rgba(61, 158, 255, 0.4) 160deg,
+        transparent 260deg
+    );
+    opacity: 0.55;
+    mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1px));
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1px));
+    animation: signature-sweep 9s linear infinite;
+}
+
+.signature-name {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.72);
+}
+
+@keyframes signature-breathe {
+    0%, 100% { opacity: 0.88; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.04); }
+}
+
+@keyframes signature-ring {
+    0%, 100% { transform: scale(1); opacity: 0.85; }
+    50% { transform: scale(1.06); opacity: 1; }
+}
+
+@keyframes signature-sweep {
+    to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .signature-f-letter,
+    .signature-f-ring,
+    .signature-f-ring::before {
+        animation: none;
+    }
 }
 
 .site-footer p {

@@ -16,6 +16,7 @@ YOKATLAS_2025_ZIP = Path(os.environ.get("YOKATLAS_2025_ZIP", r"C:\Users\Fatih SA
 ENCODING = "utf-8-sig"
 
 YEARS = list(range(2019, 2026))
+METRIC_YEARS = ["2024", "2023", "2022", "2021", "2020", "2019", "2018", "2017", "2016", "2015"]
 
 
 def clean_text(value: Any) -> str | None:
@@ -58,6 +59,52 @@ def to_float(value: Any) -> float | None:
     if math.isnan(number) or number < 0:
         return None
     return round(number, 5)
+
+
+def pick_int_row(row: dict[str, str], stem: str, *, allow_zero: bool = False) -> int | None:
+    for year in METRIC_YEARS:
+        value = to_int(row.get(f"{stem}{year}"))
+        if value is None:
+            continue
+        if not allow_zero and value == 0:
+            continue
+        return value
+    return None
+
+
+def pick_float_row(row: dict[str, str], stem: str, *, allow_zero: bool = False) -> float | None:
+    for year in METRIC_YEARS:
+        value = to_float(row.get(f"{stem}{year}"))
+        if value is None:
+            continue
+        if not allow_zero and value == 0:
+            continue
+        return value
+    return None
+
+
+def score_span(row: dict[str, str]) -> tuple[float | None, float | None]:
+    score_012 = to_float(row.get("final_score_012"))
+    score_018 = to_float(row.get("final_score_018"))
+    if score_012 is None and score_018 is None:
+        return None, None
+    if score_012 is None:
+        return score_018, score_018
+    if score_018 is None:
+        return score_012, score_012
+    return score_012, max(score_012, score_018)
+
+
+def rank_span(row: dict[str, str]) -> tuple[int | None, int | None]:
+    rank_012 = to_int(row.get("final_rank_012"))
+    rank_018 = to_int(row.get("final_rank_018"))
+    if rank_012 is None and rank_018 is None:
+        return None, None
+    if rank_012 is None:
+        return rank_018, rank_018
+    if rank_018 is None:
+        return rank_012, rank_012
+    return rank_012, min(rank_012, rank_018)
 
 
 def normalize_score_type(value: Any) -> str | None:
@@ -134,6 +181,8 @@ def build_2019_2024() -> dict[int, list[dict[str, Any]]]:
         if year not in range(2019, 2025):
             continue
 
+        taban_puan, tavan_puan = score_span(row)
+        taban_siralama, tavan_siralama = rank_span(row)
         record = base_record(year, "archive.zip / 01_university_admissions_turkey_2019_2024.csv")
         record.update(
             {
@@ -148,8 +197,10 @@ def build_2019_2024() -> dict[int, list[dict[str, Any]]]:
                 "onlisans": clean_text(row.get("is_undergraduate")) == "False",
                 "kontenjan": to_int(row.get("total_quota")),
                 "yerlesen": to_int(row.get("total_enrolled")),
-                "taban_puan": to_float(row.get("final_score_012")),
-                "taban_siralama": to_int(row.get("final_rank_012")),
+                "taban_puan": taban_puan,
+                "tavan_puan": tavan_puan,
+                "taban_siralama": taban_siralama,
+                "tavan_siralama": tavan_siralama,
                 "etiketler": clean_text(row.get("all_tags")),
             }
         )
@@ -175,13 +226,13 @@ def build_2025() -> list[dict[str, Any]]:
                 "puan_turu": normalize_score_type(row.get("tur")),
                 "ogretim_suresi": to_int(row.get("sure")),
                 "onlisans": clean_text(row.get("onlisans")) == "1",
-                "kontenjan": to_int(row.get("kontenjan2024")),
-                "okul_birincisi_kontenjan": to_int(row.get("birinci2024")),
-                "yerlesen": to_int(row.get("yerlesen2024")),
-                "okul_birincisi_yerlesen": to_int(row.get("birinciyerlesen2024")),
-                "taban_puan": to_float(row.get("puan2024")),
-                "tavan_puan": to_float(row.get("maxpuan2024")),
-                "taban_siralama": to_int(row.get("sira2024")),
+                "kontenjan": pick_int_row(row, "kontenjan", allow_zero=True),
+                "okul_birincisi_kontenjan": pick_int_row(row, "birinci", allow_zero=True),
+                "yerlesen": pick_int_row(row, "yerlesen", allow_zero=True),
+                "okul_birincisi_yerlesen": pick_int_row(row, "birinciyerlesen", allow_zero=True),
+                "taban_puan": pick_float_row(row, "puan"),
+                "tavan_puan": pick_float_row(row, "maxpuan"),
+                "taban_siralama": pick_int_row(row, "sira"),
                 "etiketler": clean_text(row.get("aciklama")),
             }
         )
@@ -193,7 +244,7 @@ def build_2025() -> list[dict[str, Any]]:
 def write_year(year: int, records: list[dict[str, Any]]) -> None:
     payload = {
         "yil": year,
-        "son_guncelleme": "2026-05-27",
+        "son_guncelleme": "2026-05-31",
         "toplam_program": len(records),
         "not": "2025 dosyası YÖK Atlas veri setindeki en güncel yerleşmiş yıl alanlarından normalize edilmiştir.",
         "programs": records,
