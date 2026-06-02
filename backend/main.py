@@ -142,6 +142,14 @@ def hakkimizda_iletisim():
     return FileResponse(path)
 
 
+@app.get("/sayac.html")
+def sayac():
+    path = ROOT / "sayac.html"
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="sayac.html bulunamadı")
+    return FileResponse(path)
+
+
 @app.get("/robots.txt")
 def robots_txt():
     path = ROOT / "robots.txt"

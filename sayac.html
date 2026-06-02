@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6190481499147942"
+     crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Net Pusula | YKS'ye Kalan Süre</title>
+    <meta name="description" content="2026 YKS'ye kalan gün, saat, dakika ve saniyeyi anlık olarak takip edin. Net Pusula ile sınav countdown.">
+    <meta name="keywords" content="YKS sayaç, YKS countdown, 2026 YKS tarih, sınav sayacı">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Net Pusula">
+    <meta name="theme-color" content="#06080f">
+    <link rel="canonical" href="https://netpusula.com.tr/sayac.html">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="tr_TR">
+    <meta property="og:site_name" content="Net Pusula">
+    <meta property="og:title" content="Net Pusula | YKS'ye Kalan Süre">
+    <meta property="og:description" content="2026 YKS'ye kalan süreyi anlık takip edin.">
+    <meta property="og:url" content="https://netpusula.com.tr/sayac.html">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text x='12' y='68' font-family='Georgia,serif' font-size='52' font-style='italic' fill='%23c9a962'>N</text><text x='48' y='68' font-family='system-ui' font-size='44' font-weight='600' fill='%233d9eff'>P</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="assets/net-pusula.css">
+    <style>
+        .countdown-container {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: linear-gradient(180deg, #06080f 0%, #0a0f1a 100%);
+        }
+
+        .countdown-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 500;
+            color: #c9a962;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .countdown-subtitle {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.1rem;
+            color: #8892b0;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .countdown-card {
+            background: linear-gradient(145deg, #0f141f 0%, #0a0f1a 100%);
+            border: 1px solid rgba(201, 169, 98, 0.15);
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .countdown-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(201, 169, 98, 0.1);
+        }
+
+        .countdown-value {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #3d9eff;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 20px rgba(61, 158, 255, 0.3);
+        }
+
+        .countdown-label {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #8892b0;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .countdown-info {
+            margin-top: 3rem;
+            text-align: center;
+            color: #5a6478;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .countdown-info i {
+            color: #c9a962;
+            margin-right: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .countdown-title {
+                font-size: 2rem;
+            }
+
+            .countdown-subtitle {
+                font-size: 1rem;
+                margin-bottom: 2rem;
+            }
+
+            .countdown-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .countdown-card {
+                padding: 1.5rem 1rem;
+            }
+
+            .countdown-value {
+                font-size: 2.5rem;
+            }
+
+            .countdown-label {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .countdown-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .countdown-value {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="index.html" class="brand wordmark" aria-label="Net Pusula Ana sayfa">
+                <span class="wordmark-line"><span class="wm-net">Net</span><span class="wm-pusula">Pusula</span></span>
+                <span class="wm-sub">YKS puan &amp; sıralama</span>
+            </a>
+            <nav class="nav-links" aria-label="Ana menü">
+                <a href="index.html">Ana Sayfa</a>
+                <a href="taban-puanlari.html">Taban Puanları</a>
+                <a href="blog.html">Blog</a>
+                <a href="sayac.html">Sayaç</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="countdown-container">
+        <h1 class="countdown-title">YKS'ye Kalan Süre</h1>
+        <p class="countdown-subtitle">2026 YKS'ye ne kadar zaman kaldı?</p>
+
+        <div class="countdown-grid">
+            <div class="countdown-card">
+                <div class="countdown-value" id="days">00</div>
+                <div class="countdown-label">Gün</div>
+            </div>
+            <div class="countdown-card">
+                <div class="countdown-value" id="hours">00</div>
+                <div class="countdown-label">Saat</div>
+            </div>
+            <div class="countdown-card">
+                <div class="countdown-value" id="minutes">00</div>
+                <div class="countdown-label">Dakika</div>
+            </div>
+            <div class="countdown-card">
+                <div class="countdown-value" id="seconds">00</div>
+                <div class="countdown-label">Saniye</div>
+            </div>
+        </div>
+
+        <p class="countdown-info">
+            <i class="fas fa-info-circle"></i>
+            TYT: 20 Haziran 2026 Cumartesi 10:15
+        </p>
+    </section>
+
+    <footer class="site-footer">
+        <div class="creator-signature" aria-label="Tasarım: Fatih">
+            <div class="signature-f" aria-hidden="true">
+                <span class="signature-f-letter">F</span>
+                <span class="signature-f-ring"></span>
+            </div>
+            <span class="signature-name">Fatih</span>
+        </div>
+        <p class="footer-wordmark"><span class="wm-net">Net</span><span class="wm-pusula">Pusula</span></p>
+        <p class="footer-copy">© 2026 Net Pusula. Tüm hakları saklıdır.</p>
+        <nav class="footer-links" aria-label="Alt bilgi">
+            <a href="index.html">Ana Sayfa</a>
+            <a href="taban-puanlari.html">Taban Puanları</a>
+            <a href="blog.html">Blog</a>
+            <a href="gizlilik-politikasi.html">Gizlilik Politikası</a>
+            <a href="kullanim-sartlari.html">Kullanım Şartları</a>
+            <a href="hakkimizda-iletisim.html">Hakkımızda & İletişim</a>
+        </nav>
+    </footer>
+
+    <script>
+        // YKS 2026 TYT tarihi
+        const yksDate = new Date('2026-06-20T10:15:00');
+
+        function updateCountdown() {
+            const now = new Date();
+            const diff = yksDate - now;
+
+            if (diff <= 0) {
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        }
+
+        // Hemen güncelle, sonra her saniye güncelle
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>

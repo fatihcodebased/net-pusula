@@ -9,6 +9,11 @@ COPY backend/ backend/
 COPY data/ data/
 COPY index.html .
 COPY taban-puanlari.html .
+COPY blog.html .
+COPY gizlilik-politikasi.html .
+COPY kullanim-sartlari.html .
+COPY hakkimizda-iletisim.html .
+COPY sayac.html .
 COPY assets/ assets/
 
 ENV PORT=8000
