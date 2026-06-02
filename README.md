@@ -1,62 +1,92 @@
-# Net Pusula — YKS Puan Hesaplama
+# YKS Puan Hesaplama — Portfolio
 
-ÖSYM katsayı ve yığılma Excel verileriyle TYT / AYT netlerinden puan ve sıralama tahmini.
+Bu paket; **ön yüz** (HTML/CSS/JS), **hesaplama için kullanılan Excel veri tabloları** ve kısa dokümantasyonu bir arada sunar. Üretim sunucu yapılandırması, API anahtarları ve tam `api.py` kodu burada zorunlu değildir; veri dosyaları backend’i kendiniz çalıştırırken veya incelemek için eklenmiştir.
 
-## Gereksinimler
+## İçindekiler
 
-- Python 3.10+
-- `data/` klasöründeki `.xlsx` dosyaları (repoda veya [GitHub data](https://github.com/bilgingurek/yks-tercih-sihirbazi/tree/main/data))
+| Dosya / klasör | Açıklama |
+|----------------|----------|
+| `index.html` | TYT/AYT net girişi, OBP, sonuç alanı ve bilgilendirme içeriği |
+| `assets/puan-hesaplama.css` | Hesaplayıcı arayüz stilleri |
+| `assets/layout-shell.css` | Üst menü, portfolio notu ve footer kabuğu |
+| `assets/puan-hesaplama.js` | Net hesaplama, `POST /yks/calculate` ile sonuç isteği |
+| `data/*.xlsx` | Katsayı ve yığılma tabloları (aşağıda ayrıntılı liste) |
 
-## Kurulum
+## Veri tabloları (`data/`)
 
-```powershell
-cd "c:\Users\Fatih SALMAN\Desktop\yks-tercih-sihirbazi-main"
-pip install -r requirements.txt
-```
+Backend’deki `YKSHesaplayici` sınıfı bu dosya adlarıyla uyumludur; kendi API’nizi bu klasörü `base_path` olarak gösterecek şekilde çalıştırabilirsiniz.
 
-## Çalıştırma
+### Katsayı dosyaları (puan türü başına)
 
-Tek komutla site + API:
-
-```powershell
-python -m uvicorn backend.main:app --reload --host 127.0.0.1 --port 8000
-```
-
-Tarayıcı: **http://127.0.0.1:8000**
-
-- `GET /yks/health` — sunucu durumu  
-- `POST /yks/calculate` — puan hesabı (JSON gövde, `assets/calculator.js` ile uyumlu)
-
-## Veri dosyaları (`data/`)
-
-| Dosya | Açıklama |
+| Dosya | Kullanım |
 |-------|----------|
-| `TYT_Puan_Katsayilari_2019_2025.xlsx` | TYT katsayıları |
+| `TYT_Puan_Katsayilari_2019_2025.xlsx` | TYT ham puan katsayıları |
 | `Sayisal_Puan_Katsayilari_2019_2025.xlsx` | Sayısal (SAY) |
 | `Esit_Agirlik_Puan_Katsayilari_2019_2025.xlsx` | Eşit ağırlık (EA) |
 | `sozel_puan_katsayilari_2019_2025.xlsx` | Sözel (SÖZ) |
 | `Dil_Puan_Katsayilari_2020_2025.xlsx` | Dil (DİL) |
-| `2022.xlsx` … `2025 Yigilma.xlsx` | Yerleştirme yığılması |
-| `*_ham_Tablo.xlsx` | Ham puan yığılması |
 
-## Proje yapısı
+### Yığılma dosyaları (yerleştirme puanı sıralaması)
 
-| Yol | Açıklama |
-|-----|----------|
-| `index.html` | Net Pusula arayüzü |
-| `assets/net-pusula.css` | Koyu tema stilleri |
-| `assets/calculator.js` | Net + API istemcisi |
-| `backend/yks_hesaplayici.py` | Excel tabanlı hesaplama |
-| `backend/main.py` | FastAPI + statik dosyalar |
+| Dosya | Yıl / not |
+|-------|-----------|
+| `2022.xlsx` … `2024.xlsx` | İlgili yıl yerleştirme yığılması |
+| `2025 Yigilma.xlsx` | 2025 yığılma |
 
-## Buluta yayınlama
+### Ham puan yığılması (ham puan sıralaması)
 
-Laptop’u 7/24 açık tutmadan internete açmak için adım adım rehber:
+| Dosya | Yıl |
+|-------|-----|
+| `2022_YKS_Yiginsal_Dagilim_ham_Tablo.xlsx` | 2022 |
+| `2023_YKS_Yiginsal_Dagilim_ham_Tablo.xlsx` | 2023 |
+| `2024_YKS_Yiginsal_Dagilim_ham_Tablo.xlsx` | 2024 |
+| `2025_YKS_Yiginsal_Dagilim_ham_Tablo.xlsx` | 2025 |
 
-**[DEPLOY.md](./DEPLOY.md)** — Railway (önerilen), Render, domain, güncelleme.
+> Tarayıcıdaki statik sayfa bu Excel’leri doğrudan okumaz; okuma işlemi sunucu tarafında (pandas vb.) yapılır.
 
-Projede `Dockerfile` ve `railway.toml` hazırdır.
+## Yerelde önizleme
 
-## Not
+Kök dizinde (`portfolio/yks-puan-hesaplama/`):
 
-Sonuçlar yayımlanmış tablolara dayalı **tahmindir**; resmi ÖSYM sonucu değildir. Taban puanları modülü sonraki sürümde eklenecek.
+```bash
+python3 -m http.server 8080
+```
+
+Tarayıcı: `http://localhost:8080`
+
+> **Not:** API tabanı ayarlanmadan “Hesapla” isteği aynı origin üzerinde `/yks/calculate` arar; statik sunucuda bu uç yoksa hata alırsınız — bu beklenen davranıştır.
+
+## API’yi bağlama (isteğe bağlı)
+
+Kendi veya herkese açık bir API’niz varsa, sayfayı yüklemeden önce taban URL’yi verin:
+
+```html
+<script>
+  window.__YKS_API_BASE__ = 'https://ornek-alanadiniz.com';
+</script>
+```
+
+Sunucunun şu uçlara yanıt vermesi gerekir:
+
+- `POST /yks/calculate` — istek gövdesi, üretimdeki `api.py` ile uyumlu JSON
+- `GET /yks/health` — sağlık kontrolü (istemci bağlantıyı doğrulamak için kullanır)
+
+API sürecinin bu Excel’leri okuması için veri klasörünü ana projedeki `tercih simülasyonu` yapısına benzer şekilde (`data/` içeriğini `base_path` olarak) bağlamanız gerekir.
+
+CORS, API’nin barındığı alan adından bu statik sayfaya izin verecek şekilde yapılandırılmalıdır.
+
+## Üretim sürümünden farklar
+
+- Google Tag Manager / reklam ölçümü kaldırıldı
+- Ürün reklam slider’ı kaldırıldı; yerine portfolio açıklama kutusu eklendi
+- Navigasyon ve footer, harici site linkleri yerine GitHub odaklı sadeleştirildi
+- Logo ve sosyal görseller (`/static/images/...`) kaldırıldı
+- İstemci kodunda **sabit sunucu IP’si** bulunmaz
+
+## Tam backend (ana repo)
+
+FastAPI route’ları, şablonlar ve diğer site sayfaları ana projededir; bu paket özellikle **portfolio + veri + ön yüz** tekrarını kolaylaştırmak içindir.
+
+## Lisans / telif
+
+İçerik ve formüller eğitim / portfolio gösterimi içindir. ÖSYM ve resmi veri kaynaklarının kullanım koşullarına uyum sizin sorumluluğunuzdadır.

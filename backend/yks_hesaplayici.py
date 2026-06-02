@@ -211,6 +211,12 @@ class YKSHesaplayici:
             return None
 
         work = df.dropna(subset=["min"]).sort_values("min", ascending=False)
+        
+        # Maksimum puan kontrolü - en yüksek aralıktaki minimum değerden büyükse sıralama 1
+        max_threshold = work["min"].max()
+        if puan >= max_threshold:
+            return 1
+        
         for _, row in work.iterrows():
             try:
                 threshold = float(row["min"])
