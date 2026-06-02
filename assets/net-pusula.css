@@ -765,6 +765,66 @@ a:hover { text-decoration: underline; }
     padding: 2.5rem 1.5rem 3rem;
 }
 
+/* SEO bilgi bloğu */
+.seo-info-block {
+    position: relative;
+    z-index: 1;
+    max-width: var(--max);
+    margin: 0 auto 2rem;
+    padding: 0 1.5rem;
+}
+
+.seo-info-inner {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    padding: 1.4rem;
+}
+
+.seo-info-inner h2 {
+    font-size: 1.1rem;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.8rem;
+}
+
+.seo-info-inner h3 {
+    font-size: 0.95rem;
+    color: var(--text);
+    margin: 1rem 0 0.55rem;
+}
+
+.seo-info-inner p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.7;
+}
+
+/* AdSense yer tutucuları */
+.ad-placeholder {
+    border: 1px dashed rgba(201, 169, 98, 0.45);
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, rgba(201, 169, 98, 0.08), rgba(61, 158, 255, 0.05));
+    min-height: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0.9rem;
+}
+
+.ad-placeholder span {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+}
+
+.ad-placeholder-inline {
+    margin-top: 1rem;
+}
+
 .legal-panel-inner {
     max-width: var(--max);
     margin: 0 auto;
@@ -1010,4 +1070,5 @@ a:hover { text-decoration: underline; }
     .settings-card { grid-template-columns: 1fr; }
     .legal-strip { flex-direction: column; align-items: flex-start; }
     .api-status { bottom: 5rem; }
+    .seo-info-inner { padding: 1.1rem; }
 }

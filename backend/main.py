@@ -110,6 +110,46 @@ def taban_puanlari():
     return FileResponse(path)
 
 
+@app.get("/gizlilik-politikasi.html")
+def gizlilik_politikasi():
+    path = ROOT / "gizlilik-politikasi.html"
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="gizlilik-politikasi.html bulunamadı")
+    return FileResponse(path)
+
+
+@app.get("/kullanim-sartlari.html")
+def kullanim_sartlari():
+    path = ROOT / "kullanim-sartlari.html"
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="kullanim-sartlari.html bulunamadı")
+    return FileResponse(path)
+
+
+@app.get("/hakkimizda-iletisim.html")
+def hakkimizda_iletisim():
+    path = ROOT / "hakkimizda-iletisim.html"
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="hakkimizda-iletisim.html bulunamadı")
+    return FileResponse(path)
+
+
+@app.get("/robots.txt")
+def robots_txt():
+    path = ROOT / "robots.txt"
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="robots.txt bulunamadı")
+    return FileResponse(path, media_type="text/plain")
+
+
+@app.get("/sitemap.xml")
+def sitemap_xml():
+    path = ROOT / "sitemap.xml"
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="sitemap.xml bulunamadı")
+    return FileResponse(path, media_type="application/xml")
+
+
 assets_dir = ROOT / "assets"
 if assets_dir.is_dir():
     app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
