@@ -273,6 +273,63 @@ a:hover { text-decoration: underline; }
 
 .legal-strip-link:hover { text-decoration: underline; }
 
+/* Bilgi ve sayaç paneli */
+.stats-section {
+    position: relative;
+    z-index: 1;
+    max-width: var(--max);
+    margin: 0 auto 1.4rem;
+    padding: 0 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.85rem;
+}
+
+.stats-card {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, rgba(61, 158, 255, 0.08), rgba(201, 169, 98, 0.06));
+    padding: 0.9rem 1rem;
+    animation: stats-breathe 7s ease-in-out infinite;
+}
+
+.stats-card:nth-child(2) { animation-delay: 0.8s; }
+.stats-card:nth-child(3) { animation-delay: 1.4s; }
+
+.stats-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border);
+    color: var(--gold);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+}
+
+.stats-card h3 {
+    font-size: 0.74rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 0.2rem;
+}
+
+.stats-card p {
+    font-size: 0.84rem;
+    color: var(--text);
+    font-weight: 600;
+}
+
+@keyframes stats-breathe {
+    0%, 100% { transform: translateY(0); border-color: var(--border); }
+    50% { transform: translateY(-2px); border-color: rgba(61, 158, 255, 0.35); }
+}
+
 /* İki sütun: hesap + yan ayarlar */
 .content-layout {
     position: relative;
@@ -676,6 +733,27 @@ a:hover { text-decoration: underline; }
     font-weight: 600;
 }
 
+.shared-result-notice {
+    border: 1px solid rgba(61, 158, 255, 0.35);
+    background: rgba(61, 158, 255, 0.1);
+    color: var(--text-muted);
+    border-radius: var(--radius-sm);
+    padding: 0.8rem 0.95rem;
+    font-size: 0.82rem;
+    margin-bottom: 0.95rem;
+}
+
+.result-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.9rem;
+}
+
+.share-result-btn {
+    width: auto;
+    min-width: 180px;
+}
+
 /* Yan ayarlar */
 .settings-rail {
     position: sticky;
@@ -823,6 +901,58 @@ a:hover { text-decoration: underline; }
 
 .ad-placeholder-inline {
     margin-top: 1rem;
+}
+
+.student-guide-preview {
+    position: relative;
+    z-index: 1;
+    max-width: var(--max);
+    margin: 0 auto 2rem;
+    padding: 0 1.5rem;
+}
+
+.student-guide-inner {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    padding: 1.35rem;
+}
+
+.student-guide-inner h2 {
+    font-size: 1.1rem;
+    margin-bottom: 0.95rem;
+}
+
+.student-guide-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.85rem;
+}
+
+.student-guide-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.9rem;
+    background: var(--bg-elevated);
+}
+
+.student-guide-card h3 {
+    font-size: 0.86rem;
+    line-height: 1.45;
+    margin-bottom: 0.45rem;
+}
+
+.student-guide-card p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin-bottom: 0.5rem;
+}
+
+.student-guide-card a {
+    font-size: 0.76rem;
+    font-weight: 700;
 }
 
 .legal-panel-inner {
@@ -1034,6 +1164,7 @@ a:hover { text-decoration: underline; }
 .api-status.err { border-color: rgba(248, 113, 113, 0.3); color: #f87171; }
 
 @media (max-width: 960px) {
+    .stats-section { grid-template-columns: 1fr; }
     .content-layout {
         grid-template-columns: 1fr;
         max-width: var(--max);
@@ -1059,10 +1190,14 @@ a:hover { text-decoration: underline; }
     #resetAllBtn {
         grid-column: 1 / -1;
     }
+
+    .student-guide-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 640px) {
-    .nav-links a:not([href="#hesapla"]):not([href="index.html#hesapla"]):not([href="taban-puanlari.html"]) { display: none; }
+    .nav-links a:not([href="#hesapla"]):not([href="index.html#hesapla"]):not([href="taban-puanlari.html"]):not([href="blog.html"]) { display: none; }
     .nav-links a[href="#yasal"] { display: inline; }
     .hero { padding-top: 2rem; }
     .panel { padding: 1.15rem; }

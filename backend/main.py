@@ -110,6 +110,14 @@ def taban_puanlari():
     return FileResponse(path)
 
 
+@app.get("/blog.html")
+def blog():
+    path = ROOT / "blog.html"
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="blog.html bulunamadı")
+    return FileResponse(path)
+
+
 @app.get("/gizlilik-politikasi.html")
 def gizlilik_politikasi():
     path = ROOT / "gizlilik-politikasi.html"

@@ -27,6 +27,7 @@ const AYT_TESTS = [
 
 let debounceTimer = null;
 let hasCalculated = false;
+let loadedFromSharedLink = false;
 
 const STORAGE = {
     autoRecalc: 'np_autoRecalc',
@@ -163,6 +164,120 @@ function collectPayload() {
     };
 }
 
+function getFormStateForShare() {
+    const tests = [...TYT_TESTS, ...AYT_TESTS];
+    const state = {
+        obp: parseFloat(document.getElementById('obp')?.value || '0') || 0,
+        previousPlacement: document.getElementById('previousPlacement')?.checked ? '1' : '0',
+    };
+    tests.forEach((test) => {
+        state[`${test.prefix}_d`] = parseInt(document.getElementById(`${test.prefix}_d`)?.value || '0', 10) || 0;
+        state[`${test.prefix}_y`] = parseInt(document.getElementById(`${test.prefix}_y`)?.value || '0', 10) || 0;
+    });
+    return state;
+}
+
+function buildShareUrl() {
+    const url = new URL(window.location.href);
+    url.search = '';
+    const params = new URLSearchParams();
+    const state = getFormStateForShare();
+    Object.entries(state).forEach(([key, value]) => params.set(key, String(value)));
+    url.search = params.toString();
+    return url.toString();
+}
+
+function showToast(message, ok = true) {
+    const el = document.getElementById('globalToast');
+    if (!el) return;
+    el.textContent = message;
+    el.className = `api-status show ${ok ? 'ok' : 'err'}`;
+    window.clearTimeout(showToast._timer);
+    showToast._timer = window.setTimeout(() => {
+        el.classList.remove('show');
+    }, 2600);
+}
+
+async function handleShareResult() {
+    if (!hasCalculated) {
+        showToast('Önce puan hesaplaması yapmalısın.', false);
+        return;
+    }
+    const shareUrl = buildShareUrl();
+    let copied = false;
+
+    try {
+        if (navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(shareUrl);
+            copied = true;
+        }
+    } catch (_) {
+        copied = false;
+    }
+
+    try {
+        if (navigator.share) {
+            await navigator.share({
+                title: 'Net Pusula YKS Sonuç Linki',
+                text: 'YKS tahmin sonucuma buradan bakabilirsin:',
+                url: shareUrl,
+            });
+        }
+    } catch (_) {
+        // User cancelled native share.
+    }
+
+    showToast(
+        copied
+            ? 'Sonuç linki kopyalandı, arkadaşlarına gönderebilirsin!'
+            : 'Paylaşım linki hazır. Adres çubuğundan kopyalayabilirsin!',
+        copied
+    );
+}
+
+function readSharedParams() {
+    const params = new URLSearchParams(window.location.search);
+    if (!params.size) return false;
+
+    const tests = [...TYT_TESTS, ...AYT_TESTS];
+    let changed = false;
+    tests.forEach((test) => {
+        const dKey = `${test.prefix}_d`;
+        const yKey = `${test.prefix}_y`;
+        const dVal = params.get(dKey);
+        const yVal = params.get(yKey);
+        if (dVal !== null || yVal !== null) {
+            const dInput = document.getElementById(dKey);
+            const yInput = document.getElementById(yKey);
+            if (dInput && yInput) {
+                dInput.value = String(Math.max(0, Math.min(test.max, parseInt(dVal || '0', 10) || 0)));
+                yInput.value = String(Math.max(0, Math.min(test.max, parseInt(yVal || '0', 10) || 0)));
+                updateNet(test.prefix, test.max);
+                changed = true;
+            }
+        }
+    });
+
+    const obpParam = params.get('obp');
+    if (obpParam !== null) {
+        const obpInput = document.getElementById('obp');
+        if (obpInput) {
+            obpInput.value = String(Math.max(0, Math.min(100, parseFloat(obpParam) || 0)));
+            changed = true;
+        }
+    }
+
+    const prevParam = params.get('previousPlacement');
+    if (prevParam !== null) {
+        const prev = document.getElementById('previousPlacement');
+        if (prev) {
+            prev.checked = prevParam === '1' || prevParam === 'true';
+            changed = true;
+        }
+    }
+    return changed;
+}
+
 async function hesaplaVeGoster(otomatik = false) {
     const btn = document.getElementById('calculateBtn');
     const originalHtml = btn.innerHTML;
@@ -212,6 +327,10 @@ function gosterSonuclar(sonuclar) {
     const section = document.getElementById('resultsSection');
     const container = document.getElementById('resultsContainer');
     section.classList.add('visible');
+    const sharedNotice = document.getElementById('sharedResultNotice');
+    if (sharedNotice) {
+        sharedNotice.hidden = !loadedFromSharedLink;
+    }
 
     const turAd = {
         TYT: 'TYT',
@@ -310,4 +429,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('previousPlacement')?.addEventListener('change', scheduleRecalc);
 
     document.getElementById('calculateBtn')?.addEventListener('click', () => hesaplaVeGoster(false));
+    document.getElementById('shareResultBtn')?.addEventListener('click', handleShareResult);
+
+    loadedFromSharedLink = readSharedParams();
+    if (loadedFromSharedLink) {
+        hasCalculated = true;
+        // Shared linkten gelen veride sonuçları doğrudan üret.
+        hesaplaVeGoster(true);
+    }
 });

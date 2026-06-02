@@ -39,6 +39,7 @@
             <nav class="nav-links" aria-label="Ana menü">
                 <a href="#hesapla">Hesapla</a>
                 <a href="taban-puanlari.html">Taban Puanları</a>
+                <a href="blog.html">Blog</a>
                 <a href="#sonuclar">Sonuçlar</a>
                 <a href="#yasal">Yasal</a>
             </nav>
@@ -71,6 +72,30 @@
         <p>Net Pusula, <strong>ÖSYM veya herhangi bir resmî kurumla bağlantılı değildir</strong>. Gösterilen sonuçlar bilgilendirme amaçlı tahmindir.</p>
         <a href="#yasal" class="legal-strip-link">Yasal bilgi →</a>
     </div>
+
+    <section class="stats-section" aria-label="Net Pusula veri özeti">
+        <article class="stats-card">
+            <div class="stats-icon"><i class="fas fa-landmark" aria-hidden="true"></i></div>
+            <div>
+                <h3>Veri Kaynağı</h3>
+                <p>ÖSYM &amp; YÖK Atlas</p>
+            </div>
+        </article>
+        <article class="stats-card">
+            <div class="stats-icon"><i class="fas fa-layer-group" aria-hidden="true"></i></div>
+            <div>
+                <h3>Kapsam</h3>
+                <p>209 Üniversite / 24.500+ Program / Tüm YKS Puan Türleri</p>
+            </div>
+        </article>
+        <article class="stats-card">
+            <div class="stats-icon"><i class="fas fa-calendar-check" aria-hidden="true"></i></div>
+            <div>
+                <h3>Güncellik</h3>
+                <p>Haziran 2026 Verileri Aktif</p>
+            </div>
+        </article>
+    </section>
 
     <div class="content-layout">
         <div class="main-column">
@@ -141,7 +166,15 @@
                 Bu tablo <strong>tahmini</strong> değerler içerir; bağlayıcı değildir. Tercih ve başvuru kararlarınızda yalnızca ÖSYM’nin resmi sonuç belgelerini esas alın.
                 <a href="#yasal">Ayrıntılı yasal uyarılar</a>
             </div>
+            <div id="sharedResultNotice" class="shared-result-notice" hidden>
+                Bir arkadaşınızın YKS tahminidir. Kendi puanınızı hesaplamak için aşağıdaki formu güncelleyebilirsiniz.
+            </div>
             <div id="resultsContainer"></div>
+            <div class="result-actions">
+                <button type="button" id="shareResultBtn" class="btn-secondary share-result-btn">
+                    <i class="fas fa-share-nodes"></i> Sonucu Paylaş
+                </button>
+            </div>
             <div class="ad-placeholder ad-placeholder-inline" aria-label="Reklam alanı">
                 <span>Reklam Alanı (Sonuçlar Altı)</span>
             </div>
@@ -211,6 +244,29 @@
         </div>
     </section>
 
+    <section class="student-guide-preview" aria-labelledby="ogrenci-rehberi-heading">
+        <div class="student-guide-inner">
+            <h2 id="ogrenci-rehberi-heading">Öğrenci Rehberi</h2>
+            <div class="student-guide-grid">
+                <article class="student-guide-card">
+                    <h3>2026 YKS Tercih Döneminde Dikkat Edilmesi Gerekenler</h3>
+                    <p>Tercih listesi oluştururken başarı sırası aralıkları, şehir-üniversite dengesi ve bölüm kontenjan trendlerini nasıl yorumlamanız gerektiğini adım adım öğrenin.</p>
+                    <a href="blog.html#yks-tercih-2026">Devamını oku</a>
+                </article>
+                <article class="student-guide-card">
+                    <h3>OBP (Ortaöğretim Başarı Puanı) Sıralamaları Nasıl Etkiler?</h3>
+                    <p>OBP artışının hangi puan türlerinde daha belirgin etki ürettiğini, yerleştirme puanı farkının tercih sonuçlarına nasıl yansıdığını sade örneklerle inceleyin.</p>
+                    <a href="blog.html#obp-etkisi">Devamını oku</a>
+                </article>
+                <article class="student-guide-card">
+                    <h3>Üniversite Kayıt Süreci ve Gerekli Belgeler Rehberi</h3>
+                    <p>Kayıt haftasında hangi belgelerin istendiği, e-kayıt adımları ve kesin kayıt günü dikkat edilmesi gereken kritik noktaları tek sayfada görün.</p>
+                    <a href="blog.html#kayit-sureci">Devamını oku</a>
+                </article>
+            </div>
+        </div>
+    </section>
+
     <section class="legal-panel" id="yasal" aria-labelledby="legal-heading">
         <div class="legal-panel-inner">
             <h2 id="legal-heading">Yasal uyarılar ve sorumluluk reddi</h2>
@@ -258,6 +314,7 @@
         <nav class="footer-links" aria-label="Alt bilgi">
             <a href="#hesapla">Hesapla</a>
             <a href="taban-puanlari.html">Taban Puanları</a>
+            <a href="blog.html">Blog</a>
             <a href="gizlilik-politikasi.html">Gizlilik Politikası</a>
             <a href="kullanim-sartlari.html">Kullanım Şartları</a>
             <a href="hakkimizda-iletisim.html">Hakkımızda & İletişim</a>
@@ -265,6 +322,7 @@
             <a href="#">Başa dön</a>
         </nav>
     </footer>
+    <div id="globalToast" class="api-status" role="status" aria-live="polite"></div>
 
     <script>
         const CARD_GROUPS = {
