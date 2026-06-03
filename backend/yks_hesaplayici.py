@@ -34,22 +34,19 @@ YIGILMA_HAM = {
     2025: "2025_YKS_Yiginsal_Dagilim_ham_Tablo.xlsx",
 }
 
-# Ham tablo sütun isimleri (2025_YKS_Yiginsal_Dagilim_ham_Tablo.xlsx)
-PUAN_TURU_COL_HAM = {
-    "TYT": ("TYT",),
-    "SAY": ("Sayısal", "SAYISAL"),
-    "SÖZ": ("Sözel", "SÖZEL"),
-    "EA": ("Eşit Ağırlık", "EŞİT AĞIRLIK", "EŞIT AĞIRLIK"),
-    "DİL": ("Dil", "DİL"),
-}
-
-# Yer tablo sütun isimleri (2025 Yigilma.xlsx)
-PUAN_TURU_COL_YER = {
-    "TYT": ("TYT",),
-    "SAY": ("SAYISAL",),
-    "SÖZ": ("SÖZEL",),
-    "EA": ("EŞİT AĞIRLIK",),
-    "DİL": ("DİL",),
+# Standardized column indices for the Yığılma dataframes
+# Column 0: Puan Aralığı
+# Column 1: TYT count
+# Column 2: SAY count
+# Column 3: SÖZ count
+# Column 4: EA count
+# Column 5: DİL count
+PUAN_TURU_COL_IDX = {
+    "TYT": 1,
+    "SAY": 2,
+    "SÖZ": 3,
+    "EA": 4,
+    "DİL": 5,
 }
 
 # Excel satır adı -> net anahtarı
@@ -133,6 +130,17 @@ class YKSHesaplayici:
         self._yigilma_ham: dict[int, pd.DataFrame] = {}
         self._load()
 
+    def _load_clean_yigilma(self, path: Path) -> pd.DataFrame:
+        """Finds the correct header row and loads/cleans the dataframe robustly."""
+        df_raw = pd.read_excel(path, header=None)
+        header_idx = 0
+        for idx, row in df_raw.iterrows():
+            row_str = [str(x).lower().replace(" ", "").replace("ı", "i") for x in row if pd.notna(x)]
+            if any("puanaral" in x for x in row_str) or ("min" in row_str and "max" in row_str):
+                header_idx = idx
+                break
+        return pd.read_excel(path, header=header_idx)
+
     def _load(self) -> None:
         for tur, fname in KATSAYI_FILES.items():
             path = self.base_path / fname
@@ -141,11 +149,10 @@ class YKSHesaplayici:
             self._katsayilar[tur] = pd.read_excel(path)
 
         for year, fname in YIGILMA_YER.items():
-            self._yigilma_yer[year] = pd.read_excel(self.base_path / fname)
+            self._yigilma_yer[year] = self._load_clean_yigilma(self.base_path / fname)
 
         for year, fname in YIGILMA_HAM.items():
-            header = 2 if year in (2022, 2023, 2024) else 0
-            self._yigilma_ham[year] = pd.read_excel(self.base_path / fname, header=header)
+            self._yigilma_ham[year] = self._load_clean_yigilma(self.base_path / fname)
 
     def _coef_table(self, puan_turu: str) -> dict[str, dict[int, float]]:
         df = self._katsayilar[puan_turu]
@@ -205,36 +212,34 @@ class YKSHesaplayici:
         obp = max(0.0, min(100.0, diploma)) * 5.0
         return round(ham + obp * OBP_KATSAYI, 3)
 
-    def _find_col(self, df: pd.DataFrame, aliases: tuple[str, ...]) -> str | None:
-        for col in df.columns:
-            cn = _norm(str(col))
-            for alias in aliases:
-                if _norm(alias) == cn:
-                    return col
-        return None
-
-    def _siralama(self, puan: float | None, df: pd.DataFrame, puan_turu: str, col_mapping: dict[str, tuple[str, ...]]) -> int | None:
+    def _siralama(self, puan: float | None, df: pd.DataFrame, puan_turu: str) -> int | None:
         if puan is None or puan <= 0:
             return None
-        aliases = col_mapping.get(puan_turu, (puan_turu,))
-        col = self._find_col(df, aliases)
-        if not col or "min" not in df.columns:
+            
+        col_idx = PUAN_TURU_COL_IDX.get(puan_turu)
+        if col_idx is None or "min" not in df.columns or col_idx >= len(df.columns):
             return None
 
-        work = df.dropna(subset=["min"]).sort_values("min", ascending=False)
+        work = df.dropna(subset=["min"]).copy()
+        work["min"] = pd.to_numeric(work["min"], errors="coerce")
+        work = work.dropna(subset=["min"]).sort_values("min", ascending=False)
         
-        # Maksimum puan kontrolü - en yüksek aralıktaki minimum değerden büyükse sıralama 1
+        if work.empty:
+            return None
+
+        # Return rank 1 if calculated score is greater than or equal to maximum threshold
         max_threshold = work["min"].max()
         if puan >= max_threshold:
             return 1
-        
+
+        col_name = df.columns[col_idx]
         for _, row in work.iterrows():
             try:
                 threshold = float(row["min"])
             except (TypeError, ValueError):
                 continue
             if puan >= threshold:
-                val = row[col]
+                val = row[col_name]
                 if pd.notna(val):
                     return int(val)
         return None
@@ -249,8 +254,8 @@ class YKSHesaplayici:
             for tur in ("TYT", "SAY", "SÖZ", "EA", "DİL"):
                 ham = self._ham_puan(tur, year, nets)
                 yer = self._yer_puan(ham, diploma)
-                ham_sr = self._siralama(ham, self._yigilma_ham[year], tur, PUAN_TURU_COL_HAM)
-                yer_sr = self._siralama(yer, self._yigilma_yer[year], tur, PUAN_TURU_COL_YER)
+                ham_sr = self._siralama(ham, self._yigilma_ham[year], tur)
+                yer_sr = self._siralama(yer, self._yigilma_yer[year], tur)
                 yil_veri[tur] = {
                     "Ham Puan": ham,
                     "Ham P. Sıralama": ham_sr,
