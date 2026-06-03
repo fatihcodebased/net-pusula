@@ -733,6 +733,117 @@ a:hover { text-decoration: underline; }
     font-weight: 600;
 }
 
+.results-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.results-year {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg-elevated);
+}
+
+.results-year-label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+}
+
+.results-year-select {
+    appearance: none;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-family: inherit;
+    font-weight: 800;
+    font-size: 0.9rem;
+    padding-right: 0.15rem;
+}
+
+.results-year-select:focus { outline: none; }
+
+.results-subnote {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+}
+
+.score-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 0.85rem;
+}
+
+.score-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.95rem;
+    box-shadow: var(--shadow);
+}
+
+.score-card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.score-type {
+    font-weight: 900;
+    letter-spacing: 0.01em;
+}
+
+.score-year {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    font-weight: 800;
+    letter-spacing: 0.06em;
+}
+
+.score-values {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+}
+
+.score-val-label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 0.25rem;
+}
+
+.score-val-num {
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+}
+
+.score-val-primary .score-val-num {
+    font-size: 1.28rem;
+    color: var(--text);
+}
+
+.score-val-secondary .score-val-num {
+    font-size: 1.02rem;
+    color: var(--text-muted);
+}
+
+.score-val-secondary { opacity: 0.9; }
+
 .shared-result-notice {
     border: 1px solid rgba(61, 158, 255, 0.35);
     background: rgba(61, 158, 255, 0.1);

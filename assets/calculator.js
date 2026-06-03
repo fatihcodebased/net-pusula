@@ -28,6 +28,7 @@ const AYT_TESTS = [
 let debounceTimer = null;
 let hasCalculated = false;
 let loadedFromSharedLink = false;
+let katsayiPromise = null;
 
 const STORAGE = {
     autoRecalc: 'np_autoRecalc',
@@ -128,11 +129,26 @@ function scheduleRecalc() {
     debounceTimer = setTimeout(() => hesaplaVeGoster(true), 700);
 }
 
-function collectPayload() {
-    let diploma = parseFloat(document.getElementById('obp').value) || 0;
-    if (document.getElementById('previousPlacement').checked) {
-        diploma = diploma / 2;
+async function loadKatsayilar() {
+    if (!katsayiPromise) {
+        katsayiPromise = fetch('data/yks_katsayilar.json').then(async (r) => {
+            if (!r.ok) {
+                let msg = `Katsayı verisi alınamadı (${r.status})`;
+                try {
+                    const err = await r.json();
+                    if (err?.detail) msg = String(err.detail);
+                } catch (_) {}
+                throw new Error(msg);
+            }
+            return r.json();
+        });
     }
+    return katsayiPromise;
+}
+
+function collectPayload() {
+    const diploma = parseFloat(document.getElementById('obp').value) || 0;
+    const previousPlacement = Boolean(document.getElementById('previousPlacement').checked);
 
     const block = (prefix) => ({
         dogru: parseInt(document.getElementById(`${prefix}_d`).value, 10) || 0,
@@ -141,6 +157,7 @@ function collectPayload() {
 
     return {
         obp: diploma,
+        previousPlacement,
         tyt: {
             turkce: block('tyt_turk'),
             sosyal: block('tyt_sos'),
@@ -288,24 +305,36 @@ async function hesaplaVeGoster(otomatik = false) {
     }
 
     try {
-        const response = await fetch(`${API_URL}/yks/calculate`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(collectPayload()),
-        });
+        const payload = collectPayload();
+        let data = null;
+        if (window.YKSEngine?.calculate) {
+            const katsayilar = await loadKatsayilar();
+            data = window.YKSEngine.calculate(payload, katsayilar, { years: [2025, 2024, 2023, 2022] });
+        } else {
+            const apiPayload = { ...payload };
+            delete apiPayload.previousPlacement;
+            if (payload.previousPlacement) {
+                apiPayload.obp = apiPayload.obp / 2;
+            }
+            const response = await fetch(`${API_URL}/yks/calculate`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(apiPayload),
+            });
 
-        if (!response.ok) {
-            const err = await response.json().catch(() => ({}));
-            throw new Error(err.detail || `Sunucu hatası (${response.status})`);
+            if (!response.ok) {
+                const err = await response.json().catch(() => ({}));
+                throw new Error(err.detail || `Sunucu hatası (${response.status})`);
+            }
+
+            const result = await response.json();
+            if (result.status !== 'success') {
+                throw new Error(result.message || 'Hesaplama başarısız');
+            }
+            data = result.data;
         }
-
-        const result = await response.json();
-        if (result.status !== 'success') {
-            throw new Error(result.message || 'Hesaplama başarısız');
-        }
-
         hasCalculated = true;
-        gosterSonuclar(result.data);
+        gosterSonuclar(data);
 
         if (!otomatik && settings.scrollResults) {
             document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -340,32 +369,74 @@ function gosterSonuclar(sonuclar) {
         'DİL': 'Dil',
     };
     const turler = ['TYT', 'SAY', 'SÖZ', 'EA', 'DİL'];
-    const yillar = [2025, 2024, 2023, 2022];
+    const years = Object.keys(sonuclar || {})
+        .map((x) => parseInt(x, 10))
+        .filter((x) => Number.isFinite(x))
+        .sort((a, b) => b - a);
 
-    let html = '';
-    yillar.forEach((yil) => {
-        if (!sonuclar[yil]) return;
-        html += `<div class="year-block"><h3>${yil} YKS — Puan ve sıralama</h3>`;
-        html += '<div class="table-wrap"><table class="results-table"><thead><tr>';
-        html += '<th>Puan türü</th><th>Ham puan</th><th>Ham sıra</th><th>Yer. puan</th><th>Yer. sıra</th>';
-        html += '</tr></thead><tbody>';
+    const storedYear = parseInt(localStorage.getItem('np_resultYear') || '', 10);
+    const defaultYear = years.includes(storedYear) ? storedYear : years[0];
+    const yearOptions = years.map((y) => `<option value="${y}" ${y === defaultYear ? 'selected' : ''}>${y}</option>`).join('');
 
-        turler.forEach((tur) => {
-            const v = sonuclar[yil][tur];
-            if (!v) return;
-            html += '<tr>';
-            html += `<td>${turAd[tur] || tur}</td>`;
-            html += `<td>${fmtPuan(v['Ham Puan'])}</td>`;
-            html += `<td>${fmtSira(v['Ham P. Sıralama'])}</td>`;
-            html += `<td>${fmtPuan(v['Yer. Puanı'])}</td>`;
-            html += `<td>${fmtSira(v['Yer. Sıralama'])}</td>`;
-            html += '</tr>';
+    container.innerHTML = `
+        <div class="results-topbar">
+            <div class="results-year">
+                <span class="results-year-label">Yıl</span>
+                <select id="resultYearSelect" class="results-year-select">${yearOptions}</select>
+            </div>
+            <div class="results-subnote">Seçili yıla göre ham ve yerleştirme puanları</div>
+        </div>
+        <div id="scoreCards" class="score-grid"></div>
+    `;
+
+    const cardsEl = document.getElementById('scoreCards');
+    const selectEl = document.getElementById('resultYearSelect');
+
+    const renderYear = (year) => {
+        const yilData = sonuclar?.[year];
+        if (!yilData) {
+            cardsEl.innerHTML = '';
+            return;
+        }
+
+        cardsEl.innerHTML = turler
+            .map((tur) => {
+                const v = yilData?.[tur];
+                const ham = v?.['Ham Puan'];
+                const yer = v?.['Yer. Puanı'];
+                return `
+                    <div class="score-card">
+                        <div class="score-card-head">
+                            <div class="score-type">${turAd[tur] || tur}</div>
+                            <div class="score-year">${year}</div>
+                        </div>
+                        <div class="score-values">
+                            <div class="score-val score-val-primary">
+                                <div class="score-val-label">Yerleştirme</div>
+                                <div class="score-val-num">${fmtPuan(yer)}</div>
+                            </div>
+                            <div class="score-val score-val-secondary">
+                                <div class="score-val-label">Ham</div>
+                                <div class="score-val-num">${fmtPuan(ham)}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            })
+            .join('');
+    };
+
+    if (selectEl) {
+        selectEl.addEventListener('change', () => {
+            const y = parseInt(selectEl.value, 10);
+            if (Number.isFinite(y)) {
+                localStorage.setItem('np_resultYear', String(y));
+                renderYear(y);
+            }
         });
+    }
 
-        html += '</tbody></table></div></div>';
-    });
-
-    container.innerHTML = html;
+    renderYear(defaultYear);
 }
 
 function fmtPuan(n) {
