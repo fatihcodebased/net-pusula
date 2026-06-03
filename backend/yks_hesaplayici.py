@@ -34,12 +34,22 @@ YIGILMA_HAM = {
     2025: "2025_YKS_Yiginsal_Dagilim_ham_Tablo.xlsx",
 }
 
-PUAN_TURU_COL = {
-    "TYT": ("TYT", "TYT"),
-    "SAY": ("SAYISAL", "Sayısal"),
-    "SÖZ": ("SÖZEL", "Sözel"),
-    "EA": ("EŞİT AĞIRLIK", "Eşit Ağırlık", "EŞIT AĞIRLIK"),
-    "DİL": ("DİL", "Dil"),
+# Ham tablo sütun isimleri (2025_YKS_Yiginsal_Dagilim_ham_Tablo.xlsx)
+PUAN_TURU_COL_HAM = {
+    "TYT": ("TYT",),
+    "SAY": ("Sayısal", "SAYISAL"),
+    "SÖZ": ("Sözel", "SÖZEL"),
+    "EA": ("Eşit Ağırlık", "EŞİT AĞIRLIK", "EŞIT AĞIRLIK"),
+    "DİL": ("Dil", "DİL"),
+}
+
+# Yer tablo sütun isimleri (2025 Yigilma.xlsx)
+PUAN_TURU_COL_YER = {
+    "TYT": ("TYT",),
+    "SAY": ("SAYISAL",),
+    "SÖZ": ("SÖZEL",),
+    "EA": ("EŞİT AĞIRLIK",),
+    "DİL": ("DİL",),
 }
 
 # Excel satır adı -> net anahtarı
@@ -134,7 +144,8 @@ class YKSHesaplayici:
             self._yigilma_yer[year] = pd.read_excel(self.base_path / fname)
 
         for year, fname in YIGILMA_HAM.items():
-            self._yigilma_ham[year] = pd.read_excel(self.base_path / fname)
+            header = 2 if year in (2022, 2023, 2024) else 0
+            self._yigilma_ham[year] = pd.read_excel(self.base_path / fname, header=header)
 
     def _coef_table(self, puan_turu: str) -> dict[str, dict[int, float]]:
         df = self._katsayilar[puan_turu]
@@ -202,10 +213,10 @@ class YKSHesaplayici:
                     return col
         return None
 
-    def _siralama(self, puan: float | None, df: pd.DataFrame, puan_turu: str) -> int | None:
+    def _siralama(self, puan: float | None, df: pd.DataFrame, puan_turu: str, col_mapping: dict[str, tuple[str, ...]]) -> int | None:
         if puan is None or puan <= 0:
             return None
-        aliases = PUAN_TURU_COL.get(puan_turu, (puan_turu,))
+        aliases = col_mapping.get(puan_turu, (puan_turu,))
         col = self._find_col(df, aliases)
         if not col or "min" not in df.columns:
             return None
@@ -238,8 +249,8 @@ class YKSHesaplayici:
             for tur in ("TYT", "SAY", "SÖZ", "EA", "DİL"):
                 ham = self._ham_puan(tur, year, nets)
                 yer = self._yer_puan(ham, diploma)
-                ham_sr = self._siralama(ham, self._yigilma_ham[year], tur)
-                yer_sr = self._siralama(yer, self._yigilma_yer[year], tur)
+                ham_sr = self._siralama(ham, self._yigilma_ham[year], tur, PUAN_TURU_COL_HAM)
+                yer_sr = self._siralama(yer, self._yigilma_yer[year], tur, PUAN_TURU_COL_YER)
                 yil_veri[tur] = {
                     "Ham Puan": ham,
                     "Ham P. Sıralama": ham_sr,
