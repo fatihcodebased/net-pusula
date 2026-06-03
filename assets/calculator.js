@@ -307,15 +307,13 @@ async function hesaplaVeGoster(otomatik = false) {
     try {
         const payload = collectPayload();
         let data = null;
-        if (window.YKSEngine?.calculate) {
-            const katsayilar = await loadKatsayilar();
-            data = window.YKSEngine.calculate(payload, katsayilar, { years: [2025, 2024, 2023, 2022] });
-        } else {
-            const apiPayload = { ...payload };
-            delete apiPayload.previousPlacement;
-            if (payload.previousPlacement) {
-                apiPayload.obp = apiPayload.obp / 2;
-            }
+        const apiPayload = { ...payload };
+        delete apiPayload.previousPlacement;
+        if (payload.previousPlacement) {
+            apiPayload.obp = apiPayload.obp / 2;
+        }
+
+        try {
             const response = await fetch(`${API_URL}/yks/calculate`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -332,6 +330,16 @@ async function hesaplaVeGoster(otomatik = false) {
                 throw new Error(result.message || 'Hesaplama başarısız');
             }
             data = result.data;
+        } catch (apiErr) {
+            if (window.YKSEngine?.calculate) {
+                const katsayilar = await loadKatsayilar();
+                data = window.YKSEngine.calculate(payload, katsayilar, { years: [2025, 2024, 2023, 2022] });
+                if (!otomatik) {
+                    showToast('Sıralama için sunucuya ulaşılamadı. Puanlar gösteriliyor.', false);
+                }
+            } else {
+                throw apiErr;
+            }
         }
         hasCalculated = true;
         gosterSonuclar(data);
@@ -404,6 +412,8 @@ function gosterSonuclar(sonuclar) {
                 const v = yilData?.[tur];
                 const ham = v?.['Ham Puan'];
                 const yer = v?.['Yer. Puanı'];
+                const hamSr = v?.['Ham P. Sıralama'];
+                const yerSr = v?.['Yer. Sıralama'];
                 return `
                     <div class="score-card">
                         <div class="score-card-head">
@@ -412,11 +422,19 @@ function gosterSonuclar(sonuclar) {
                         </div>
                         <div class="score-values">
                             <div class="score-val score-val-primary">
-                                <div class="score-val-label">Yerleştirme</div>
+                                <div class="score-val-label">Yer sırası</div>
+                                <div class="score-val-num">${fmtSira(yerSr)}</div>
+                            </div>
+                            <div class="score-val score-val-primary">
+                                <div class="score-val-label">Yer puanı</div>
                                 <div class="score-val-num">${fmtPuan(yer)}</div>
                             </div>
                             <div class="score-val score-val-secondary">
-                                <div class="score-val-label">Ham</div>
+                                <div class="score-val-label">Ham sıra</div>
+                                <div class="score-val-num">${fmtSira(hamSr)}</div>
+                            </div>
+                            <div class="score-val score-val-secondary">
+                                <div class="score-val-label">Ham puan</div>
                                 <div class="score-val-num">${fmtPuan(ham)}</div>
                             </div>
                         </div>
