@@ -36,17 +36,15 @@ YIGILMA_HAM = {
 
 # Standardized column indices for the Yığılma dataframes
 # Column 0: Puan Aralığı
-# Column 1: TYT count
-# Column 2: SAY count
-# Column 3: SÖZ count
-# Column 4: EA count
-# Column 5: DİL count
+# Columns 1-5: Cumulative counts (TYT, SAY, SÖZ, EA, DİL)
+# Columns 7-8: min, max score ranges
+# Columns 9-13: Ranking data (TYT.1, SAYISAL.1, SÖZEL.1, EŞİT AĞIRLIK.1, DİL.1)
 PUAN_TURU_COL_IDX = {
-    "TYT": 1,
-    "SAY": 2,
-    "SÖZ": 3,
-    "EA": 4,
-    "DİL": 5,
+    "TYT": 9,
+    "SAY": 10,
+    "SÖZ": 11,
+    "EA": 12,
+    "DİL": 13,
 }
 
 # Excel satır adı -> net anahtarı
@@ -227,19 +225,14 @@ class YKSHesaplayici:
         if work.empty:
             return None
 
-        # Return rank 1 if calculated score is greater than or equal to maximum threshold
-        max_threshold = work["min"].max()
-        if puan >= max_threshold:
-            return 1
-
-        col_name = df.columns[col_idx]
+        # Find the correct score range and return the corresponding rank
         for _, row in work.iterrows():
             try:
                 threshold = float(row["min"])
             except (TypeError, ValueError):
                 continue
             if puan >= threshold:
-                val = row[col_name]
+                val = row.iloc[col_idx]
                 if pd.notna(val):
                     return int(val)
         return None
