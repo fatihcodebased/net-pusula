@@ -34,19 +34,6 @@ YIGILMA_HAM = {
     2025: "2025_YKS_Yiginsal_Dagilim_ham_Tablo.xlsx",
 }
 
-# Standardized column indices for the Yığılma dataframes
-# Column 0: Puan Aralığı
-# Columns 1-5: Cumulative counts (TYT, SAY, SÖZ, EA, DİL)
-# Columns 7-8: min, max score ranges
-# Columns 9-13: Ranking data (TYT.1, SAYISAL.1, SÖZEL.1, EŞİT AĞIRLIK.1, DİL.1)
-PUAN_TURU_COL_IDX = {
-    "TYT": 9,
-    "SAY": 10,
-    "SÖZ": 11,
-    "EA": 12,
-    "DİL": 13,
-}
-
 # Excel satır adı -> net anahtarı
 DERS_NET_MAP = {
     "turkce": ["türkçe", "turkce"],
@@ -120,10 +107,81 @@ def _match_ders_key(ders_adi: str) -> str | None:
     return None
 
 
+def _yigilma_find_col(df: pd.DataFrame, *candidates: str) -> str | None:
+    if df is None or df.empty:
+        return None
+    norm_to_last: dict[str, str] = {}
+    for col in df.columns:
+        norm_to_last[_norm(str(col))] = col
+    for c in candidates:
+        v = norm_to_last.get(_norm(c))
+        if v is not None:
+            return str(v)
+    return None
+
+
+def _yigilma_rank_col(df: pd.DataFrame, puan_turu: str) -> str | None:
+    if df is None or df.empty:
+        return None
+
+    def find_in_cols(cols: list[Any], *needles: str) -> str | None:
+        want = {_norm(x) for x in needles}
+        for c in cols:
+            if _norm(str(c)) in want:
+                return str(c)
+        return None
+
+    max_col = _yigilma_find_col(df, "max")
+    cols_all = list(df.columns)
+    cols_post: list[Any] = cols_all
+    if max_col is not None and max_col in df.columns:
+        idx = cols_all.index(max_col)
+        cols_post = cols_all[idx + 1 :]
+
+    if puan_turu == "TYT":
+        return find_in_cols(cols_post, "TYT.1", "TYT1", "TYT") or find_in_cols(cols_all, "TYT.1", "TYT1", "TYT")
+    if puan_turu == "SAY":
+        return find_in_cols(cols_post, "SAYISAL.1", "SAYISAL1", "SAYISAL", "SAY") or find_in_cols(
+            cols_all, "SAYISAL.1", "SAYISAL1", "SAYISAL", "SAY"
+        )
+    if puan_turu == "SÖZ":
+        return find_in_cols(cols_post, "SÖZEL.1", "SOZEL.1", "SOZEL1", "SÖZEL", "SOZEL", "SÖZ") or find_in_cols(
+            cols_all, "SÖZEL.1", "SOZEL.1", "SOZEL1", "SÖZEL", "SOZEL", "SÖZ"
+        )
+    if puan_turu == "EA":
+        return find_in_cols(
+            cols_post,
+            "EŞİT AĞIRLIK.1",
+            "ESIT AGIRLIK.1",
+            "ESITAGIRLIK.1",
+            "ESITAGIRLIK1",
+            "EŞİT AĞIRLIK",
+            "ESIT AGIRLIK",
+            "ESITAGIRLIK",
+            "EA",
+        ) or find_in_cols(
+            cols_all,
+            "EŞİT AĞIRLIK.1",
+            "ESIT AGIRLIK.1",
+            "ESITAGIRLIK.1",
+            "ESITAGIRLIK1",
+            "EŞİT AĞIRLIK",
+            "ESIT AGIRLIK",
+            "ESITAGIRLIK",
+            "EA",
+        )
+    if puan_turu == "DİL":
+        return find_in_cols(cols_post, "DİL.1", "DIL.1", "DIL1", "DİL", "DIL") or find_in_cols(
+            cols_all, "DİL.1", "DIL.1", "DIL1", "DİL", "DIL"
+        )
+    return None
+
+
 class YKSHesaplayici:
     def __init__(self, base_path: str | Path) -> None:
         self.base_path = Path(base_path)
         self._katsayilar: dict[str, pd.DataFrame] = {}
+        self._coef_tables: dict[str, dict[str, dict[int, float]]] = {}
         self._yigilma_yer: dict[int, pd.DataFrame] = {}
         self._yigilma_ham: dict[int, pd.DataFrame] = {}
         self._load()
@@ -145,6 +203,7 @@ class YKSHesaplayici:
             if not path.exists():
                 raise FileNotFoundError(f"Eksik veri dosyası: {path}")
             self._katsayilar[tur] = pd.read_excel(path)
+            self._coef_tables[tur] = self._coef_table(tur)
 
         for year, fname in YIGILMA_YER.items():
             self._yigilma_yer[year] = self._load_clean_yigilma(self.base_path / fname)
@@ -190,7 +249,7 @@ class YKSHesaplayici:
         return None
 
     def _ham_puan(self, puan_turu: str, year: int, nets: dict[str, float]) -> float | None:
-        table = self._coef_table(puan_turu)
+        table = self._coef_tables[puan_turu]
         base = table.get("__base__", {}).get(year)
         if base is None:
             return None
@@ -213,28 +272,38 @@ class YKSHesaplayici:
     def _siralama(self, puan: float | None, df: pd.DataFrame, puan_turu: str) -> int | None:
         if puan is None or puan <= 0:
             return None
-            
-        col_idx = PUAN_TURU_COL_IDX.get(puan_turu)
-        if col_idx is None or "min" not in df.columns or col_idx >= len(df.columns):
+
+        min_col = _yigilma_find_col(df, "min")
+        max_col = _yigilma_find_col(df, "max")
+        rank_col = _yigilma_rank_col(df, puan_turu)
+        if min_col is None or rank_col is None:
             return None
 
-        work = df.dropna(subset=["min"]).copy()
-        work["min"] = pd.to_numeric(work["min"], errors="coerce")
-        work = work.dropna(subset=["min"]).sort_values("min", ascending=False)
-        
+        work = df.copy()
+        work[min_col] = pd.to_numeric(work[min_col], errors="coerce")
+        if max_col is not None:
+            work[max_col] = pd.to_numeric(work[max_col], errors="coerce")
+
+        work = work.dropna(subset=[min_col])
         if work.empty:
             return None
 
-        # Find the correct score range and return the corresponding rank
-        for _, row in work.iterrows():
-            try:
-                threshold = float(row["min"])
-            except (TypeError, ValueError):
-                continue
-            if puan >= threshold:
-                val = row.iloc[col_idx]
-                if pd.notna(val):
-                    return int(val)
+        if max_col is not None and max_col in work.columns and work[max_col].notna().any():
+            scoped = work.dropna(subset=[max_col])
+            if not scoped.empty:
+                hit = scoped[(scoped[min_col] <= puan) & (scoped[max_col] >= puan)]
+                if not hit.empty:
+                    val = hit.iloc[0][rank_col]
+                    if pd.notna(val):
+                        return int(val)
+
+        work = work.sort_values(min_col, ascending=False)
+        hit2 = work[work[min_col] <= puan]
+        if hit2.empty:
+            return None
+        val = hit2.iloc[0][rank_col]
+        if pd.notna(val):
+            return int(val)
         return None
 
     def hesapla(self, obp: float, tyt: dict, ayt: dict) -> dict[int, dict[str, dict[str, Any]]]:
