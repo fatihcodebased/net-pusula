@@ -334,9 +334,6 @@ async function hesaplaVeGoster(otomatik = false) {
             if (window.YKSEngine?.calculate) {
                 const katsayilar = await loadKatsayilar();
                 data = window.YKSEngine.calculate(payload, katsayilar, { years: [2025, 2024, 2023, 2022] });
-                if (!otomatik) {
-                    showToast('Sıralama için sunucuya ulaşılamadı. Puanlar gösteriliyor.', false);
-                }
             } else {
                 throw apiErr;
             }
@@ -412,8 +409,6 @@ function gosterSonuclar(sonuclar) {
                 const v = yilData?.[tur];
                 const ham = v?.['Ham Puan'];
                 const yer = v?.['Yer. Puanı'];
-                const hamSr = v?.['Ham P. Sıralama'];
-                const yerSr = v?.['Yer. Sıralama'];
                 return `
                     <div class="score-card">
                         <div class="score-card-head">
@@ -422,18 +417,10 @@ function gosterSonuclar(sonuclar) {
                         </div>
                         <div class="score-values">
                             <div class="score-val score-val-primary">
-                                <div class="score-val-label">Yer sırası</div>
-                                <div class="score-val-num">${fmtSira(yerSr)}</div>
-                            </div>
-                            <div class="score-val score-val-primary">
                                 <div class="score-val-label">Yer puanı</div>
                                 <div class="score-val-num">${fmtPuan(yer)}</div>
                             </div>
-                            <div class="score-val score-val-secondary">
-                                <div class="score-val-label">Ham sıra</div>
-                                <div class="score-val-num">${fmtSira(hamSr)}</div>
-                            </div>
-                            <div class="score-val score-val-secondary">
+                            <div class="score-val score-val-primary">
                                 <div class="score-val-label">Ham puan</div>
                                 <div class="score-val-num">${fmtPuan(ham)}</div>
                             </div>

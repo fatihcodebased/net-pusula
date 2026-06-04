@@ -316,13 +316,9 @@ class YKSHesaplayici:
             for tur in ("TYT", "SAY", "SÖZ", "EA", "DİL"):
                 ham = self._ham_puan(tur, year, nets)
                 yer = self._yer_puan(ham, diploma)
-                ham_sr = self._siralama(ham, self._yigilma_ham[year], tur)
-                yer_sr = self._siralama(yer, self._yigilma_yer[year], tur)
                 yil_veri[tur] = {
                     "Ham Puan": ham,
-                    "Ham P. Sıralama": ham_sr,
                     "Yer. Puanı": yer,
-                    "Yer. Sıralama": yer_sr,
                 }
             sonuc[year] = yil_veri
 
